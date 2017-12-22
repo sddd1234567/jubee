@@ -20,7 +20,7 @@ app.get('/', function (req, res) {
 })
 
 app.get('/search', function (req, res) {
-    res.render('search', { title: "啾比比價網--首頁" });
+    res.render('search', { title: "啾比比價網--搜尋結果" });
 })
 
 app.listen(port);
