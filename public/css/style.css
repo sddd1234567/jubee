@@ -1,0 +1,99 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanstc.css);
+
+body{
+    font-family: 'Noto Sans TC', sans-serif;
+}
+
+#headNav .nav-link{
+    padding-top: unset;
+    padding-bottom: unset;
+    color: black;
+    /* 這裡設定上面那排的文字顏色 */
+    background-color: unset;
+    /* 這裡設定上面那排的背景色 */
+}
+
+.main{
+    padding-top: 139px;
+    text-align: center;
+}
+
+form{
+    padding: 0.5em;
+}
+
+#hotTag{
+    padding: 0.8em;
+}
+
+#hotTag button{
+    /* border-color: black; */
+}
+
+#logo{
+    /* 這裡可以調首頁LOGO大小 */
+    width: 50%;
+}
+
+.w-100{
+    max-height:160px;
+    /* width: auto!important; */
+}
+
+.carousel-inner{
+    width: 85%;
+}
+
+.carousel-control-next{
+    width: unset;
+}
+
+.carousel-control-prev{
+    width: unset;
+}
+
+.carousel-control-next-icon {
+    background-image: url(../img/right.png);
+    width: 50px;
+    height: 50px;
+    margin-left: 2vw;
+}
+
+.carousel-control-prev-icon {
+    background-image: url(../img/left.png);
+    width: 50px;
+    height: 50px;
+    margin-right: 2vw;
+}
+
+.carousel-inner .discount .rate{
+    border: solid;
+    border-color: red;
+    color: red;
+    font-size: 1.5vw;
+    line-height: 2;
+}
+
+.carousel-inner .discount .price{
+    color: red;
+}
+
+#carouselExampleControls{
+    padding-top: 50px;
+}
+
+#head_search{
+    padding-top:10px;
+}
+
+#search_result img{
+    height: 160px;
+}
+
+#search_result .price{
+    color: red;
+}
+
+#search_result .result_buttons{
+    float:right;
+}
