@@ -13,20 +13,26 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-warning" id="headNav">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="/">
             <!-- 這裡改成左上角的特殊字體(圖片) -->
             <img src="http://bootstrap.hexschool.com/assets/brand/bootstrap-solid.svg" width="30" height="30" alt="">
         </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarTogglerDemo03"
+            aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
 
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+
+        <div class="collapse navbar-collapse" id="navbar">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             </ul>
             <div class="form-inline my-2 my-lg-0">
-                <a class="nav-item nav-link" href="#">我的收藏</a>
+                <a class="nav-item nav-link" href="collect">我的收藏</a>
             </div>
             <div class="form-inline my-2 my-lg-0">
                 <a class="nav-item nav-link" href="#" data-toggle="modal" data-target="#login">登入</a>/
@@ -39,7 +45,7 @@
         <div class="container">
             <div class="row mx-auto">
                 <div class="col-12 col-md-3" style = "margin-top:.5rem;text-align:center;">
-                    <h2>啾比比價</h2>
+                    <h2><a href = "/" id = "main-logo-link">啾比比價</a></h2>
                 </div>
                 <div class="col-12 col-md-8" style = "text-align:center;">
                     <form action = "/search" method = "get">
@@ -60,15 +66,30 @@
     <div class="container-fluid">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-                <a href="#" class="nav-link active" id="home-tab" href="#home" role="tab" aria-controls="home" aria-selected="true">搜尋結果</a>
+                <%if(classify == 'search'){%>
+                    <a href="search" class="nav-link active" id="home-tab" role="tab">搜尋結果</a>
+                <%}
+                else{%>
+                    <a href="search" class="nav-link" id="home-tab" role="tab">搜尋結果</a>
+                <%}%>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link" id="profile-tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">收藏</a>
+                <%if(classify == 'collect'){%>
+                    <a href="collect" class="nav-link active" id="profile-tab" role="tab">收藏</a>
+                <%}
+                else{%>
+                    <a href="collect" class="nav-link" id="profile-tab" role="tab">收藏</a>
+                <%}%>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link" id="contact-tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">瀏覽紀錄</a>
+                <%if(classify == 'history'){%>
+                    <a href="history" class="nav-link active" id="contact-tab" role="tab">瀏覽紀錄</a>
+                <%}
+                else{%>
+                    <a href="history" class="nav-link" id="contact-tab" role="tab">瀏覽紀錄</a>
+                <%}%>
             </li>
-        </ul>
+        </ul>        
     </div>
     
     <div class="tab-content" id="myTabContent">

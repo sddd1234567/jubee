@@ -1,22 +1,15 @@
 <% layout('layout_main') %>
-<div class="main">
+<div class="history_main">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-12 col-md-9">
+            <div class="col-12 col-md-9">  
                 <div class="row">
                     <div class="col-12 col-lg-9">
                         <nav aria-label="breadcrumb" class="index" role="navigation">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="#">啾比比價</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">PS4 VR《上古卷軸5:無界天際》中英文版 的搜尋結果</li>
+                                <li class="breadcrumb-item active" aria-current="page">瀏覽紀錄</li>
                             </ol>
-                        </nav>
-                    </div>
-                    <div class="col-12 col-lg-3" style="text-align: right;">
-                        <nav class="index" role="navigation">
-                            <ol class="breadcrumb sortby" style="float: right;">
-                                <button type="button" class="btn btn-warning btn-sm">價格由高到低</button>
-                                <button type="button" class="btn btn-warning btn-sm">價格由低到高</button></ol>
                         </nav>
                     </div>
                 </div>
@@ -25,23 +18,6 @@
                         <tbody>
                             <tr>
                                 <td style = "width:33%;">
-                                    <a href="compare">
-                                        <center><img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;"></center>
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <p><a href="compare">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
-                                    <p>共7筆商品</p>
-                                    <p class="price">$1490~$1790</p>
-                                    <div class="result_buttons">
-                                        <a href = "compare"><button type="button" class="btn btn-info">比較價格</button></a>
-                                        <button type="button" class="btn btn-warning">收藏</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style = "width:33%;">
                                     <a href="#">
                                         <center><img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;"></center>
                                     </a>
@@ -75,8 +51,25 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width:33%;">
-                                    <a href="#">
+                                <td>
+                                    <a href="#" style = "width:33%;">
+                                        <center><img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;"></center>
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
+                                    <p>共7筆商品</p>
+                                    <p class="price">$1490~$1790</p>
+                                    <div class="result_buttons">
+                                        <button type="button" class="btn btn-info">比較價格</button>
+                                        <button type="button" class="btn btn-warning">收藏</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="#" style="width:33%;">
                                         <center><img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg"
                                                 style="margin-left:unset!important;"></center>
                                     </a>
@@ -93,8 +86,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width:33%;">
-                                    <a href="#">
+                                <td>
+                                    <a href="#" style="width:33%;">
                                         <center><img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg"
                                                 style="margin-left:unset!important;"></center>
                                     </a>
@@ -111,8 +104,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width:33%;">
-                                    <a href="#">
+                                <td>
+                                    <a href="#" style="width:33%;">
                                         <center><img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg"
                                                 style="margin-left:unset!important;"></center>
                                     </a>
@@ -130,62 +123,18 @@
                             </tr>
                         </tbody>
                     </table>
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1">前一頁</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">下一頁</a>
-                            </li>
-                        </ul>
-                    </nav>
                 </div>
             </div>
             <div class="col-12 col-md-3">
-                <div class="card border-light mb-3 mx-auto" style="max-width: 20rem;">
-                    <div class="card-header">進階搜尋</div>
-                    <div class="card-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="price_range">輸入價格範圍</label>
-                                <div class="form-row">
-                                    <input type="number" class="form-control col" id="lowest_price" placeholder="最低價格">
-                                    <label id = "price_devide">~</label>
-                                    <input type="number" class="form-control col" id="highest_price" placeholder="最高價格">
-                                </div>
-                                
-                            </div>
-                            <div class="form-group">
-                                <label for="ex_keyword">排除關鍵字</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="排除關鍵字">
-                            </div>
-                            <div class="form-check text-left">
-                                <p><label for="target_website">選擇網站</label></p>
-                                <label class="form-check-label">
-                                    <input type="checkbox" class="form-check-input">PChome24hr<br>
-                                    <input type="checkbox" class="form-check-input">momo購物網<br>
-                                    <input type="checkbox" class="form-check-input">蝦皮商城<br>
-                                    <input type="checkbox" class="form-check-input">台灣樂天<br>
-                                    <input type="checkbox" class="form-check-input">Yahoo超級商城<br>
-                                    <input type="checkbox" class="form-check-input">Udn買東西<br>
-                                </label>
-                            </div>
-                            <button type="submit" class="btn btn-info">篩選</button>
-                        </form>
-                    </div>
                 <div class="card border-light mb-3 mx-auto" style="max-width: 20rem;" id = "hot_product">
                     <div class="card-header">熱門商品</div>
                     <div class="card-body">
                         <div class="hot_item">
                             <div class="row">
-                                <div class="col-12 col-lg-4">
-                                    <center><img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;"></center>
+                                <div class="col-12 col-md-4">
+                                    <img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;">
                                 </div>
-                                <div class="col-12 col-lg-8">
+                                <div class="col-12 col-md-8">
                                     <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
                                     <p class="price">$1490~$1790</p>
                                     <div class="buy_now text-right">
@@ -197,10 +146,10 @@
                         </div>
                         <div class="hot_item">
                             <div class="row">
-                                <div class="col-12 col-lg-4">
-                                    <center><img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;"></center>
+                                <div class="col-12 col-md-4">
+                                    <img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;">
                                 </div>
-                                <div class="col-12 col-lg-8">
+                                <div class="col-12 col-md-8">
                                     <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
                                     <p class="price">$1490~$1790</p>
                                     <div class="buy_now text-right">
@@ -212,10 +161,10 @@
                         </div>
                         <div class="hot_item">
                             <div class="row">
-                                <div class="col-12 col-lg-4">
-                                    <center><img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;"></center>
+                                <div class="col-12 col-md-4">
+                                    <img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;">
                                 </div>
-                                <div class="col-12 col-lg-8">
+                                <div class="col-12 col-md-8">
                                     <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
                                     <p class="price">$1490~$1790</p>
                                     <div class="buy_now text-right">

@@ -13,8 +13,16 @@ body{
     /* 這裡設定上面那排的背景色 */
 }
 
-.main{
+.indexmain{
     padding-top: 139px;
+    text-align: center;
+}
+
+.main{
+    text-align: center;
+}
+
+.history_main{
     text-align: center;
 }
 
@@ -96,4 +104,78 @@ form{
 
 #search_result .result_buttons{
     float:right;
+}
+
+#hot_Product{
+    text-align: start;
+}
+
+#hot_product img{
+    height: 90px;
+}
+
+.hot_item .price{
+    color:red;
+    float: left;
+}
+
+#price_devide{
+    margin: unset;
+    margin-top: 0.5rem;
+    padding-left: .5rem;
+    padding-right: .5rem;
+}
+
+.index .breadcrumb{
+    margin: unset;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    background: rgba(255, 255, 255, 0.00);
+}
+
+.sortby button{
+    margin: .15em;
+}
+
+.result_buttons{
+    text-align: right;
+}
+
+.result_buttons button{
+    margin-right: 5px;
+}
+
+.result_buttons .material-icons{
+    padding-right: 1em;
+    text-align: right;
+    margin-top: 8px;
+    padding-bottom: 6px;
+}
+
+.result_buttons .material-icons a{
+     color:#ffc106;
+     /* 鈴鐺顏色 */
+}
+
+.page-link{
+    /* 下面按頁數的地方的背景色 */
+    background: #fff;
+    /* 文字顏色 */
+    color: #007bff;
+}
+
+.page-item.disable .page-link{
+    /* 不能按的頁數的顏色 */
+    background-color: #fff;
+    color: #868e96;
+}
+
+#compare-title h3{
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+#main-logo-link{
+    text-decoration: none;
+    color: black;
 }

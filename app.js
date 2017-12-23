@@ -17,10 +17,23 @@ app.use(cookieParser());
 
 app.get('/', function (req, res) {
     res.render('index', { title: "啾比比價網--首頁" });
-})
+});
 
 app.get('/search', function (req, res) {
-    res.render('search', { title: "啾比比價網--搜尋結果" });
-})
+    res.render('search', { title: "啾比比價網--搜尋結果",classify: "search" });
+});
+
+app.get('/history', function (req, res) {
+    res.render('history', { title: "啾比比價網--歷史紀錄",classify:"history"});
+});
+
+app.get('/collect', function (req, res) {
+    res.render('collect', { title: "啾比比價網--我的收藏", classify: "collect" });
+});
+
+app.get('/compare', function (req, res) {
+    res.render('compare', { title: "啾比比價網--比價", classify: "compare" });
+});
+
 
 app.listen(port);
