@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-var port = Number(process.env.PORT || 80);
+var port = Number(process.env.PORT || 3000);
 var cookieParser = require('cookie-parser');
 var engine = require('ejs-locals');
 var path = require('path');
