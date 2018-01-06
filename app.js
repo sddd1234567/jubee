@@ -58,7 +58,7 @@ app.get('/compare', function (req, res) {
 
 
 async function getPCHomeData() {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
     await page.goto('https://24h.pchome.com.tw/store/DGBJAJ?style=2');
     const result = await page.evaluate(() => {
@@ -100,7 +100,7 @@ async function getPCHomeData() {
 }
 
 async function getFridayData() {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
     await page.goto('https://shopping.friday.tw/1/0/3/7122/202775/211216.html');
     const result = await page.evaluate(() => {
@@ -141,7 +141,7 @@ async function getFridayData() {
 }
 
 async function getudnData() {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
     await page.goto('http://shopping.udn.com/mall/cus/cat/Cc1c01.do?dc_cateid_0=F_014_025_008&dc_maxproductnum_0=60');
     const result = await page.evaluate(() => {
@@ -182,7 +182,7 @@ async function getudnData() {
 }
 
 async function getKuai3Data() {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
     await page.goto('http://www.tkec.com.tw/dic2.aspx?cid=629&aid=10180&hid=92725');
     const result = await page.evaluate(() => {
@@ -224,7 +224,7 @@ async function getKuai3Data() {
 }
 
 async function getFridaySearchData(searchTitle) {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
     await page.goto('https://shopping.friday.tw/1/0/3/7122/202775/211216.html');
     await page.click('#keyword');
@@ -269,9 +269,7 @@ async function getFridaySearchData(searchTitle) {
 }
 
 async function getUdnSearchData(searchTitle) {
-    const browser = await puppeteer.launch({
-        headless: true
-    });
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
     await page.goto('http://shopping.udn.com/mall/cus/cat/Cc1c01.do?dc_cateid_0=F_014_025_008');
     await page.click('#searchbarForm #autocompletebar');
@@ -318,9 +316,7 @@ async function getUdnSearchData(searchTitle) {
 }
 
 async function getmyfoneSearchData(searchTitle) {
-    const browser = await puppeteer.launch({
-        headless: true
-    });
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
     await page.goto('https://search.myfone.com.tw/searchResult.php?sort_id=ID_4726&keyword=' + searchTitle);
     const result = await page.evaluate(() => {
@@ -363,7 +359,7 @@ async function getmyfoneSearchData(searchTitle) {
 
 
 async function searchPCHomeDataFromFirebase(title) {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
     await page.goto('https://24h.pchome.com.tw/store/DGBJAJ?style=2');
     const result = await page.evaluate(() => {
