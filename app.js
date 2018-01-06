@@ -392,8 +392,7 @@ async function searchPCHomeDataFromFirebase(title) {
     for (r in result.title_data) {
         if (wildcard(result.title_data[r].text.toLowerCase(), '*' + title.toLowerCase() + '*'))
             products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text });
-    }
-    
+    }    
 
     await browser.close();
     return products;
