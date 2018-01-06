@@ -29,7 +29,9 @@ app.get('/search', async function (req, res) {
         var title = req.query.p_name;
         await searchPCHomeDataFromFirebase(title).then(
             products => productList = products
-        );
+        ).catch((error) => {
+            assert.isNotOk(error, 'Promise error');
+        });
         console.log(productList);
         res.render('search', { title: "啾比比價網--搜尋結果", classify: "search", productList: productList });
     }
