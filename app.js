@@ -314,7 +314,7 @@ async function getUdnSearchData(searchTitle) {
 }
 
 async function getmyfoneSearchData(searchTitle) {
-    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] } 
+    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] } );
     const page = await browser.newPage();
     await page.goto('https://search.myfone.com.tw/searchResult.php?sort_id=ID_4726&keyword=' + searchTitle);
     const result = await page.evaluate(() => {
