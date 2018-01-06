@@ -38,7 +38,6 @@ app.get('/search', async function (req, res) {
         res.send("<script> window.location.replace('./') </script>");
     }
     
-    
 });
 
 app.get('/history', function (req, res) {
