@@ -11,6 +11,8 @@
   "dependencies": {
     "cookie-parser": "^1.4.3",
     "ejs-locals": "^1.0.2",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "node-wildcard": "0.0.9",
+    "puppeteer": "^0.13.0"
   }
 }
