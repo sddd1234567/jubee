@@ -17,6 +17,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+
+var admin = require("firebase-admin");
+var serviceAccount = require("./jubeecompare-firebase-adminsdk-f9u14-50866585c5.json");
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://jubeecompare.firebaseio.com"
+});
+
+
+
+
+
 app.get('/', function (req, res) {
     res.render('index', { title: "啾比比價網--首頁" });
 });
@@ -27,11 +39,45 @@ app.get('/search', async function (req, res) {
     if (req.query.p_name != undefined && req.query.p_name != "")
     {
         var title = req.query.p_name;
-        await searchPCHomeDataFromFirebase(title).then(
-            products => productList = products
-        );
-        console.log(productList);
-        res.render('search', { title: "啾比比價網--搜尋結果", classify: "search", productList: productList });
+        admin.database().ref('PChome').once('value').then(function (snapshot) {
+            var result = snapshot.val();
+            let products = new Array();
+            for (var r in result) {
+                var keywords = title.split(' ');
+                var flag = false;
+                for (var key in keywords) {
+                    // console.log(result[r][0].title);
+                    if (!(wildcard((result[r][0].title).toLowerCase(), '*' + keywords[key].toLowerCase() + '*'))) {
+                        flag = true;
+                    }
+                    // console.log(result[r][0].title);
+                }
+                if (!flag)
+                {
+                    var count = 0;
+                    var minPrice = 9999999999999;
+                    var maxPrice = 0;
+                    for(var i in result[r])
+                    {
+                        if ((wildcard((result[r][i].title).toLowerCase(), '*' + keywords[key].toLowerCase() + '*'))) 
+                        {
+                            var price = result[r][i].price.replace(',',"");
+                            if (parseInt(price) > maxPrice)
+                                maxPrice = parseInt(price);
+                            if (parseInt(price) < minPrice)
+                                minPrice = parseInt(price);
+                            // products.push({ title: result[r][i].title, price: result[r][i].price, image: result[r][i].image, url: result[r][i].url });
+                            count++;
+                        }
+                    }
+                    products.push({title:result[r][0].title, p_id: r, minPrice: minPrice, maxPrice: maxPrice, count: count, keyword: title, image: result[r][0].image});
+                }
+                    
+            }
+            res.render('search', { title: "啾比比價網--搜尋結果", classify: "search", productList: products, keyword: title });
+        }).catch(function (e) {
+            console.log(e);
+        });
     }
     else
     {
@@ -49,10 +95,67 @@ app.get('/collect', function (req, res) {
 });
 
 app.get('/compare', function (req, res) {
-    res.render('compare', { title: "啾比比價網--比價", classify: "compare" });
+    var productList;
+
+    if (req.query.p_id != undefined && req.query.p_id != "" && req.query.keyword != undefined && req.query.keyword != "")
+    {
+        var p_id = req.query.p_id;
+        var keyword = req.query.keyword
+        admin.database().ref('PChome/'+p_id).once('value').then(function (snapshot) {
+            var result = snapshot.val();
+            let products = new Array();
+            for (var r in result) {
+                var keywords = keyword.split(' ');
+                var flag = false;
+                for (var key in keywords) {
+                    if (!(wildcard((result[r].title).toLowerCase(), '*' + keywords[key].toLowerCase() + '*'))) {
+                        flag = true;
+                    }
+                }
+                if (!flag)
+                {
+                    products.push({ title: result[r].title, price: result[r].price.replace(',', ""), image: result[r].image, url: result[r].url, website: result[r].website});
+                }                    
+            }
+            products = products.sort(function (a, b) {
+                return a.price - b.price;
+            });
+            res.render('compare', { title: result[0].title + " - 比價 - 啾比比價網", classify: "search", productList: products, p_name: result[0].title });
+        }).catch(function (e) {
+            console.log(e);
+        });
+    }
+    else
+    {
+        res.send("<script> window.location.replace('./') </script>");
+    }
 });
 
 
+
+async function initialPChomeDataBase(){
+    var pchomeProducts;
+    await getPCHomeData().then(
+        products => pchomeProducts = products
+    );
+    for(var i in pchomeProducts)
+    {
+        console.log(i);
+        var data = new Array();
+        data.push(pchomeProducts[i]);
+        await getFridaySearchData(pchomeProducts[i].title).then(
+            products => Array.prototype.push.apply(data,products)
+        );
+        await getMomoSearchData(pchomeProducts[i].title).then(
+            products => Array.prototype.push.apply(data, products)
+        );
+        await getmyfoneSearchData(pchomeProducts[i].title).then(
+            products => Array.prototype.push.apply(data, products)
+        );
+        admin.database().ref('PChome').child(i).set(data);
+    }
+    console.log("end");
+}
 
 
 async function getPCHomeData() {
@@ -83,152 +186,39 @@ async function getPCHomeData() {
             img_data.push({ text });
         }
 
+        let url_data = [];
+        let URLs = document.querySelectorAll("#ProdListContainer .col3f .nick a");
 
-        return { title_data, price_data, img_data };
+        for (var element of URLs) {
+            let text = element.href;
+            url_data.push({ text });
+        }
+
+
+        return { title_data, price_data, img_data, url_data };
     });
 
     var products = new Array();
     for (r in result.title_data) {
-        products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text });
+        products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text, url: result.url_data[r].text, website: "PChome24h" });
     }
 
-    console.log(products);
 
     await browser.close();
-}
-
-async function getFridayData() {
-    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] } );
-    const page = await browser.newPage();
-    await page.goto('https://shopping.friday.tw/1/0/3/7122/202775/211216.html');
-    const result = await page.evaluate(() => {
-        let title_data = [];
-        let titles = document.querySelectorAll('#prodlist .product_name');
-        for (var element of titles) {
-            let text = element.innerText;
-            title_data.push({ text });
-        }
-
-        let price_data = [];
-        let prices = document.querySelectorAll('#prodlist .price_txt');
-
-        for (var element of prices) {
-            let text = element.innerText;
-            price_data.push({ text });
-        }
-
-        let img_data = [];
-        let images = document.querySelectorAll('#prodlist li a img');
-
-        for (var element of images) {
-            let text = element.src;
-            img_data.push({ text });
-        }
-
-        return { title_data, price_data, img_data };
-    });
-    //  console.log(result.price_data);
-    var products = new Array();
-    for (r in result.title_data) {
-        products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text });
-    }
-
-    console.log(products);
-
-    await browser.close();
-}
-
-async function getudnData() {
-    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] } );
-    const page = await browser.newPage();
-    await page.goto('http://shopping.udn.com/mall/cus/cat/Cc1c01.do?dc_cateid_0=F_014_025_008&dc_maxproductnum_0=60');
-    const result = await page.evaluate(() => {
-        let title_data = [];
-        let titles = document.querySelectorAll('.detail_list_tb .sp_name');
-        for (var element of titles) {
-            let text = element.innerText;
-            title_data.push({ text });
-        }
-
-        let price_data = [];
-        let prices = document.querySelectorAll('.detail_list_tb .pd_price .pd_hlight');
-
-        for (var element of prices) {
-            let text = element.innerText;
-            price_data.push({ text });
-        }
-
-        let img_data = [];
-        let images = document.querySelectorAll('.detail_list_tb img');
-        for (var element of images) {
-            let text = "http:" + element.getAttribute('data-src');
-            img_data.push({ text });
-        }
-
-        return { title_data, price_data, img_data };
-    });
-
-    var products = new Array();
-    console.log(result);
-    for (r in result.title_data) {
-        products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text });
-    }
-
-    console.log(products);
-
-    await browser.close();
-}
-
-async function getKuai3Data() {
-    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] } );
-    const page = await browser.newPage();
-    await page.goto('http://www.tkec.com.tw/dic2.aspx?cid=629&aid=10180&hid=92725');
-    const result = await page.evaluate(() => {
-        let title_data = [];
-        let titles = document.querySelectorAll('#ctl00_ContentPlaceHolder1_dic2UC1_PnData .prod_item h3 a');
-        for (var element of titles) {
-            let text = element.title;
-            title_data.push({ text });
-        }
-
-        let price_data = [];
-        let prices = document.querySelectorAll('#ctl00_ContentPlaceHolder1_dic2UC1_PnData .prod_item .price span');
-
-        for (var element of prices) {
-            let text = element.innerText;
-            text = text.replace('$', '');
-            price_data.push({ text });
-        }
-
-        let img_data = [];
-        let images = document.querySelectorAll('#ctl00_ContentPlaceHolder1_dic2UC1_PnData .prod_item a img');
-        for (var element of images) {
-            let text = element.src;
-            img_data.push({ text });
-        }
-
-        return { title_data, price_data, img_data };
-    });
-
-    var products = new Array();
-    console.log(result);
-    for (r in result.title_data) {
-        products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text });
-    }
-
-    console.log(products);
-
-    await browser.close();
+    return products;
 }
 
 async function getFridaySearchData(searchTitle) {
+    console.log("friday start");
     const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] } );
+    // const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
-    await page.goto('https://shopping.friday.tw/1/0/3/7122/202775/211216.html');
+    await page.goto('https://shopping.friday.tw/1/0/3/7122/202775/211216.html', { timeout: 0 });
+    await page.waitFor('#keyword');
     await page.click('#keyword');
     await page.keyboard.type(searchTitle);
     await page.click('.search_but')
-    await page.waitForNavigation();
+    await page.waitFor(".searchlist_area");
     const result = await page.evaluate(() => {
         let title_data = [];
         let titles = document.querySelectorAll(".searchlist_area .prodname h3");
@@ -253,70 +243,102 @@ async function getFridaySearchData(searchTitle) {
             img_data.push({ text });
         }
 
-        return { title_data, price_data, img_data };
+        let url_data = [];
+        let URLs = document.querySelectorAll(".searchlist_area .prodname h3 a");
+        for (var element of URLs) {
+            let text = element.href;
+            url_data.push({ text });
+        }
+
+        return { title_data, price_data, img_data, url_data };
     });
 
     var products = new Array();
     for (r in result.title_data) {
-        products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text });
+        products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text, url: result.url_data[r].text, website: "Friday" });
     }
 
-    console.log(products);
-
     await browser.close();
+    return products;
 }
 
-async function getUdnSearchData(searchTitle) {
-    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] } );
+async function getMomoSearchData(searchTitle) {
+    console.log("Momo start");
+    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+    // const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
-    await page.goto('http://shopping.udn.com/mall/cus/cat/Cc1c01.do?dc_cateid_0=F_014_025_008');
-    await page.click('#searchbarForm #autocompletebar');
-    await page.keyboard.type(searchTitle);
-    await page.click('#searchbarForm .sel_a');
-    await page.click('#F_014_025_008');
-    await page.click('.top_search_btn');
-    await page.waitForNavigation();
+    try{
+        page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
+        await page.goto('https://www.momoshop.com.tw/search/searchShop.jsp?keyword=' + searchTitle, { timeout: 0 });
+        await page.waitForNavigation();
+        await page.waitFor('.listArea');
+    }
+    catch(e){
+        console.log(e);
+    }
+    
     const result = await page.evaluate(() => {
         let title_data = [];
-        let titles = document.querySelectorAll(".result_main .lv3_item_list .lv3_item img");
-        for (var element of titles) {
-            let text = element.alt;
-            title_data.push({ text });
-        }
-
         let price_data = [];
-        let prices = document.querySelectorAll(".result_main .lv3_item_list .lv3_item .pd_price");
-
-        for (var element of prices) {
-            let text = element.innerText;
-            text = text.replace('$', '');
-            price_data.push({ text });
-        }
-
         let img_data = [];
-        let images = document.querySelectorAll(".result_main .lv3_item_list .lv3_item img");
-        for (var element of images) {
-            let text = element.src;
-            img_data.push({ text });
-        }
+        let url_data = [];
+        let titles = document.querySelectorAll(".searchPrdListArea .listArea ul li .prdName");
+        if(titles.length > 0){
+            for (var element of titles) {
+                let text = element.innerText;
+                title_data.push({ text });
+            }
 
-        return { title_data, price_data, img_data };
+            
+            let prices = document.querySelectorAll(".searchPrdListArea .listArea ul li .money .price");
+
+            for (var element of prices) {
+                let text = element.innerText;
+                text = text.replace('$', '');
+                price_data.push({ text });
+            }
+
+            
+            let images = document.querySelectorAll(".searchPrdListArea .listArea ul li .prdImg");
+            for (var element of images) {
+                let text = element.src;
+                img_data.push({ text });
+            }
+
+            
+            let URLs = document.querySelectorAll(".searchPrdListArea .listArea ul li .goodsUrl");
+            for (var element of URLs) {
+                let text = element.href;
+                url_data.push({ text });
+            }
+
+        }
+        
+
+        return { title_data, price_data, img_data, url_data };
     });
 
     var products = new Array();
     for (r in result.title_data) {
-        products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text });
+        products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text, url: result.url_data[r].text, website: "Momo" });
     }
-
-    console.log(products);
-
-    await browser.close();
+    // console.log(products);
+    await browser.close();    
+    return products;
 }
 
 async function getmyfoneSearchData(searchTitle) {
+    console.log("myfone start");
     const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] } );
+    // const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
-    await page.goto('https://search.myfone.com.tw/searchResult.php?sort_id=ID_4726&keyword=' + searchTitle);
+    try {
+        await page.goto('https://search.myfone.com.tw/searchResult.php?sort_id=ID_4726&keyword=' + searchTitle, { timeout: 0 });
+        await page.waitFor('#rightBox');
+    } catch (error) {
+        console.log(error);
+    }
+    
     const result = await page.evaluate(() => {
         let title_data = [];
         let titles = document.querySelectorAll("#rightBox #sub_page_1 .categoryPdcSmall .title");
@@ -341,62 +363,70 @@ async function getmyfoneSearchData(searchTitle) {
             img_data.push({ text });
         }
 
-        return { title_data, price_data, img_data };
+        let url_data = [];
+        let URLs = document.querySelectorAll("#rightBox #sub_page_1 .categoryPdcSmall a");
+        for (var element of URLs) {
+            let text = element.href;
+            url_data.push({ text });
+        }
+
+        return { title_data, price_data, img_data,url_data };
     });
 
     var products = new Array();
     for (r in result.title_data) {
-        products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text });
+        products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text, url: result.url_data[r].text, website: "myfone" });
     }
-
-    console.log(products);
-
-    await browser.close();
-}
-
-
-
-async function searchPCHomeDataFromFirebase(title) {
-    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] } );
-    const page = await browser.newPage();
-    await page.goto('https://24h.pchome.com.tw/store/DGBJAJ?style=2');
-    const result = await page.evaluate(() => {
-        let title_data = [];
-        let titles = document.querySelectorAll('.col3f .c1f .prod_img img');
-        for (var element of titles) {
-            let text = element.alt;
-            title_data.push({ text });
-        }
-
-        let price_data = [];
-        let prices = document.querySelectorAll('#ProdListContainer .price .value');
-
-        for (var element of prices) {
-            let text = element.innerText;
-            price_data.push({ text });
-        }
-
-        let img_data = [];
-        let images = document.querySelectorAll('.col3f .c1f .prod_img img');
-
-        for (var element of images) {
-            let text = element.src;
-            img_data.push({ text });
-        }
-
-
-        return { title_data, price_data, img_data };
-    });
-
-    let products = new Array();
-    for (r in result.title_data) {
-        if (wildcard(result.title_data[r].text.toLowerCase(), '*' + title.toLowerCase() + '*'))
-            products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text });
-    }    
 
     await browser.close();
     return products;
 }
 
+
+async function searchPCHomeData(title){
+    var data;
+    admin.database().ref('PChome').once('value').then( function (snapshot) {
+        var result = snapshot.val();
+
+        let products = new Array();
+        for (r in result) {
+            var keywords = title.split(' ');
+            var flag = false;
+            for (var key in keywords) {
+                if (!wildcard(result[r].title.toLowerCase(), '*' + keywords[key].toLowerCase() + '*')) {
+                    flag = true;
+                }
+            }
+            if (!flag)
+                products.push({ title: result[r].title, price: result[r].price, image: result[r].image, url: result[r].url });
+        }    
+        res.render('search', { title: "啾比比價網--搜尋結果", classify: "search", productList: productList });
+    }).catch(function () {
+        console.log("Promise Rejected");
+    });
+}
+
+
+async function searchPCHomeDataFromFirebase(title,result) {
+
+    let products = new Array();
+    for (r in result) {
+        var keywords = title.split(' ');
+        var flag = false;
+        for(var key in keywords)
+        {
+            if (!wildcard(result[r].title.toLowerCase(), '*' + keywords[key].toLowerCase() + '*'))
+            {
+                flag = true;
+            }
+        }
+        if (!flag)
+            products.push({ title: result[r].title, price: result[r].price, image: result[r].image,url: result[r].url });
+    }    
+    return products;
+}
+
+// getMomoSearchData("上古卷軸");
+// initialPChomeDataBase();
 
 app.listen(port);

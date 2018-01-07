@@ -8,7 +8,7 @@
                         <nav aria-label="breadcrumb" class="index" role="navigation">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="#">啾比比價</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">PS4 VR《上古卷軸5:無界天際》中英文版 的搜尋結果</li>
+                                <li class="breadcrumb-item active" aria-current="page"><%= keyword %> 的搜尋結果</li>
                             </ol>
                         </nav>
                     </div>
@@ -26,16 +26,16 @@
                             <% for(p in productList){ %>
                             <tr>
                                 <td style = "width:33%;">
-                                    <a href="compare">
+                                    <a href="compare?p_id=<%=productList[p].p_id%>&keyword=<%=productList[p].keyword%>">
                                         <center><img class="d-block" src='<%= productList[p].image %>' style="margin-left:unset!important;"></center>
                                     </a>
                                 </td>
                                     <td>
-                                        <p><a href="compare"><%= productList[p].title %></a></p>
-                                        <p>共7筆商品</p>
-                                        <p class="price">$<%= productList[p].price %></p>
+                                        <p><a href="compare?p_id=<%=productList[p].p_id%>&keyword=<%=productList[p].keyword%>"><%= productList[p].title %></a></p>
+                                        <p>共<%= productList[p].count%>筆商品</p>
+                                        <p class="price">$<%= productList[p].minPrice %>~$<%= productList[p].maxPrice %></p>
                                         <div class="result_buttons">
-                                            <a href="compare"><button type="button" class="btn btn-info">比較價格</button></a>
+                                            <a href="compare?p_id=<%=productList[p].p_id%>&keyword=<%=productList[p].keyword%>"><button type="button" class="btn btn-info">比較價格</button></a>
                                             <button type="button" class="btn btn-warning">收藏</button>
                                         </div>
                                     </td>
