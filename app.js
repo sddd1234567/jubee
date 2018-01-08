@@ -427,6 +427,8 @@ async function searchPCHomeDataFromFirebase(title,result) {
 }
 
 // getMomoSearchData("上古卷軸");
-// initialPChomeDataBase();
+initialPChomeDataBase();
+
+setInterval(initialPChomeDataBase, 1000*60*15);
 
 app.listen(port);
