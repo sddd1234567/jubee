@@ -19,17 +19,17 @@
                             <% for(index in history){ %>
                             <tr>
                                 <td style = "width:33%;">
-                                    <a href="compare?p_id=<%=history[index].p_id%>&keyword=<%=history[index].keyword%>">
+                                    <a href="<%=history[index].url%>">
                                         <center><img class="d-block" src="<%=history[index].image%>" style="margin-left:unset!important;"></center>
                                     </a>
                                 </td>
 
                                 <td>
-                                    <p><a href="compare?p_id=<%=history[index].p_id%>&keyword=<%=history[index].keyword%>"><%=history[index].title%></a></p>
+                                    <p><a href="<%=history[index].url%>"><%=history[index].title%></a></p>
                                     <p>共<%=history[index].productCount%>筆商品</p>
                                     <p class="price">$<%=history[index].minPrice%>~$<%=history[index].maxPrice%></p>
                                     <div class="result_buttons">
-                                        <a href = "compare?p_id=<%=history[index].p_id%>&keyword=<%=history[index].keyword%>"><button type="button" class="btn btn-info">比較價格</button></a>
+                                        <a href = "<%=history[index].url%>"><button type="button" class="btn btn-info">比較價格</button></a>
                                     </div>
                                 </td>
                             </tr>
@@ -50,12 +50,12 @@
                                 </div>
                                 <div class="col-12 col-lg-8">
                                     <p>
-                                        <a href="#">
+                                        <a href="<%=hotProducts[0].url%>">
                                             <%=hotProducts[0].title%>
                                         </a>
                                     </p>
                                     <p class="price">
-                                        <%=hotProducts[0].price%>
+                                        $<%=hotProducts[0].price%>
                                     </p>
                                     <div class="buy_now text-right">
                                         <a href="<%=hotProducts[0].url%>"><button type="button" class="btn btn-danger">搶購</button></a>
@@ -71,12 +71,12 @@
                                 </div>
                                 <div class="col-12 col-lg-8">
                                     <p>
-                                        <a href="#">
+                                        <a href="<%=hotProducts[1].url%>">
                                             <%=hotProducts[1].title%>
                                         </a>
                                     </p>
                                     <p class="price">
-                                        <%=hotProducts[1].price%>
+                                        $<%=hotProducts[1].price%>
                                     </p>
                                     <div class="buy_now text-right">
                                         <a href="<%=hotProducts[1].url%>"><button type="button" class="btn btn-danger">搶購</button></a>
@@ -92,12 +92,12 @@
                                 </div>
                                 <div class="col-12 col-lg-8">
                                     <p>
-                                        <a href="#">
+                                        <a href="<%=hotProducts[2].url%>">
                                             <%=hotProducts[2].title%>
                                         </a>
                                     </p>
                                     <p class="price">
-                                        <%=hotProducts[2].price%>
+                                        $<%=hotProducts[2].price%>
                                     </p>
                                     <div class="buy_now text-right">
                                         <a href="<%=hotProducts[2].url%>"><button type="button" class="btn btn-danger">搶購</button></a>

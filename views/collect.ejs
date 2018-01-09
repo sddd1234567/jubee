@@ -33,6 +33,7 @@
                                 </td>
                                 <td>
                                     <p><a href="javascript:clickLink({title: '<%=collections[index].title%>', price: <%=collections[index].price%>, website: '<%=collections[index].website%>', url: '<%=collections[index].url%>',image: '<%=collections[index].image%>'})"><%=collections[index].title%></a></p>
+                                    <p><%= collections[index].website %></p>
                                     <p class="price">$<%=collections[index].price%></p>
                                     <div class="result_buttons row">
                                         <i class="material-icons col-12 col-md-auto"><a href="#"  data-toggle="modal" data-target="#alartme">add_alert</a></i>
@@ -60,12 +61,12 @@
                                 </div>
                                 <div class="col-12 col-lg-8">
                                     <p>
-                                        <a href="#">
+                                        <a href="<%=hotProducts[0].url%>">
                                             <%=hotProducts[0].title%>
                                         </a>
                                     </p>
                                     <p class="price">
-                                        <%=hotProducts[0].price%>
+                                        $<%=hotProducts[0].price%>
                                     </p>
                                     <div class="buy_now text-right">
                                         <a href="<%=hotProducts[0].url%>"><button type="button" class="btn btn-danger">搶購</button></a>
@@ -81,12 +82,12 @@
                                 </div>
                                 <div class="col-12 col-lg-8">
                                     <p>
-                                        <a href="#">
+                                        <a href="<%=hotProducts[1].url%>">
                                             <%=hotProducts[1].title%>
                                         </a>
                                     </p>
                                     <p class="price">
-                                        <%=hotProducts[1].price%>
+                                        $<%=hotProducts[1].price%>
                                     </p>
                                     <div class="buy_now text-right">
                                         <a href="<%=hotProducts[1].url%>"><button type="button" class="btn btn-danger">搶購</button></a>
@@ -102,12 +103,12 @@
                                 </div>
                                 <div class="col-12 col-lg-8">
                                     <p>
-                                        <a href="#">
+                                        <a href="<%=hotProducts[2].url%>">
                                             <%=hotProducts[2].title%>
                                         </a>
                                     </p>
                                     <p class="price">
-                                        <%=hotProducts[2].price%>
+                                        $<%=hotProducts[2].price%>
                                     </p>
                                     <div class="buy_now text-right">
                                         <a href="<%=hotProducts[2].url%>"><button type="button" class="btn btn-danger">搶購</button></a>

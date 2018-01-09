@@ -15,8 +15,9 @@
                         <div class="col-12 col-lg-3" style="text-align: right;">
                             <nav class="index" role="navigation">
                                 <ol class="breadcrumb sortby" style="float: right;">
-                                    <button type="button" class="btn btn-warning btn-sm">價格由高到低</button>
-                                    <button type="button" class="btn btn-warning btn-sm">價格由低到高</button></ol>
+                                    <a href="compare?<%=URL%>&sort=DESC"><button type="button" class="btn btn-warning btn-sm">價格由高到低</button></a>
+                                    <a href="compare?<%=URL%>&sort=ASC"><button type="button" class="btn btn-warning btn-sm">價格由低到高</button></a>
+                                </ol>
                             </nav>
                         </div>
                     </div>
@@ -65,12 +66,12 @@
                                     </div>
                                     <div class="col-12 col-lg-8">
                                         <p>
-                                            <a href="#">
+                                            <a href="<%=hotProducts[0].url%>">
                                                 <%=hotProducts[0].title%>
                                             </a>
                                         </p>
                                         <p class="price">
-                                            <%=hotProducts[0].price%>
+                                            $<%=hotProducts[0].price%>
                                         </p>
                                         <div class="buy_now text-right">
                                             <a href="<%=hotProducts[0].url%>"><button type="button" class="btn btn-danger">搶購</button></a>
@@ -86,12 +87,12 @@
                                     </div>
                                     <div class="col-12 col-lg-8">
                                         <p>
-                                            <a href="#">
+                                            <a href="<%=hotProducts[1].url%>">
                                                 <%=hotProducts[1].title%>
                                             </a>
                                         </p>
                                         <p class="price">
-                                            <%=hotProducts[1].price%>
+                                            $<%=hotProducts[1].price%>
                                         </p>
                                         <div class="buy_now text-right">
                                             <a href="<%=hotProducts[1].url%>"><button type="button" class="btn btn-danger">搶購</button></a>
@@ -107,12 +108,12 @@
                                     </div>
                                     <div class="col-12 col-lg-8">
                                         <p>
-                                            <a href="#">
+                                            <a href="<%=hotProducts[2].url%>">
                                                 <%=hotProducts[2].title%>
                                             </a>
                                         </p>
                                         <p class="price">
-                                            <%=hotProducts[2].price%>
+                                            $<%=hotProducts[2].price%>
                                         </p>
                                         <div class="buy_now text-right">
                                             <a href="<%=hotProducts[2].url%>"><button type="button" class="btn btn-danger">搶購</button></a>

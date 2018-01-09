@@ -15,8 +15,8 @@
                     <div class="col-12 col-lg-3" style="text-align: right;">
                         <nav class="index" role="navigation">
                             <ol class="breadcrumb sortby" style="float: right;">
-                                <button type="button" class="btn btn-warning btn-sm">價格由高到低</button>
-                                <button type="button" class="btn btn-warning btn-sm">價格由低到高</button></ol>
+                                <a href = "search?<%=URL%>&sort=DESC"><button type="button" class="btn btn-warning btn-sm">價格由高到低</button></a>
+                                <a href = "search?<%=URL%>&sort=ASC"><button type="button" class="btn btn-warning btn-sm">價格由低到高</button></a>
                         </nav>
                     </div>
                 </div>
@@ -26,16 +26,16 @@
                             <% for(p in productList){ %>
                             <tr>
                                 <td style = "width:33%;">
-                                    <a href="compare?p_id=<%=productList[p].p_id%>&keyword=<%=productList[p].keyword%>">
+                                    <a href="compare?p_id=<%=productList[p].p_id%>&<%=URL%>">
                                         <center><img class="d-block" src='<%= productList[p].image %>' style="margin-left:unset!important;"></center>
                                     </a>
                                 </td>
                                     <td>
-                                        <p><a href="compare?p_id=<%=productList[p].p_id%>&keyword=<%=productList[p].keyword%>"><%= productList[p].title %></a></p>
+                                        <p><a href="compare?p_id=<%=productList[p].p_id%>&<%=URL%>"><%= productList[p].title %></a></p>
                                         <p>共<%= productList[p].count%>筆商品</p>
                                         <p class="price">$<%= productList[p].minPrice %>~$<%= productList[p].maxPrice %></p>
                                         <div class="result_buttons">
-                                            <a href="compare?p_id=<%=productList[p].p_id%>&keyword=<%=productList[p].keyword%>"><button type="button" class="btn btn-info">比較價格</button></a>
+                                            <a href="compare?p_id=<%=productList[p].p_id%>&<%=URL%>"><button type="button" class="btn btn-info">比較價格</button></a>
                                         </div>
                                     </td>
 
@@ -63,29 +63,28 @@
                 <div class="card border-light mb-3 mx-auto" style="max-width: 20rem;">
                     <div class="card-header">進階搜尋</div>
                     <div class="card-body">
-                        <form>
+                        <form action = "search" method = "get">
                             <div class="form-group">
+                                <input type="hidden" name = "keyword" value = "<%=keyword%>">
                                 <label for="price_range">輸入價格範圍</label>
                                 <div class="form-row">
-                                    <input type="number" class="form-control col" id="lowest_price" placeholder="最低價格">
+                                    <input type="number" class="form-control col" id="lowest_price" name = "min_price" placeholder="最低價格">
                                     <label id = "price_devide">~</label>
-                                    <input type="number" class="form-control col" id="highest_price" placeholder="最高價格">
+                                    <input type="number" class="form-control col" id="highest_price" name = "max_price" placeholder="最高價格">
                                 </div>
                                 
                             </div>
                             <div class="form-group">
                                 <label for="ex_keyword">排除關鍵字</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="排除關鍵字">
+                                <input type="text" class="form-control" id="exampleInputPassword1" name = "filter_keyword" placeholder="排除關鍵字(請用,區隔關鍵字)">
                             </div>
                             <div class="form-check text-left">
                                 <p><label for="target_website">選擇網站</label></p>
                                 <label class="form-check-label">
-                                    <input type="checkbox" class="form-check-input">PChome24hr<br>
-                                    <input type="checkbox" class="form-check-input">momo購物網<br>
-                                    <input type="checkbox" class="form-check-input">蝦皮商城<br>
-                                    <input type="checkbox" class="form-check-input">台灣樂天<br>
-                                    <input type="checkbox" class="form-check-input">Yahoo超級商城<br>
-                                    <input type="checkbox" class="form-check-input">Udn買東西<br>
+                                    <input type="checkbox" name = "pchome" class="form-check-input">PChome24hr<br>
+                                    <input type="checkbox" name = "momo" class="form-check-input">momo購物網<br>
+                                    <input type="checkbox" name = "friday" class="form-check-input">Friday<br>
+                                    <input type="checkbox" name = "myfone" class="form-check-input">myfone<br>
                                 </label>
                             </div>
                             <button type="submit" class="btn btn-info">篩選</button>
@@ -100,8 +99,8 @@
                                     <center><img class="d-block" src="<%=hotProducts[0].image%>" style="margin-left:unset!important;"></center>
                                 </div>
                                 <div class="col-12 col-lg-8">
-                                    <p><a href="#"><%=hotProducts[0].title%></a></p>
-                                    <p class="price"><%=hotProducts[0].price%></p>
+                                    <p><a href="<%=hotProducts[0].url%>"><%=hotProducts[0].title%></a></p>
+                                    <p class="price">$<%=hotProducts[0].price%></p>
                                     <div class="buy_now text-right">
                                         <a href = "<%=hotProducts[0].url%>"><button type="button" class="btn btn-danger">搶購</button></a>
                                     </div>
@@ -116,12 +115,12 @@
                                 </div>
                                 <div class="col-12 col-lg-8">
                                     <p>
-                                        <a href="#">
+                                        <a href="<%=hotProducts[1].url%>">
                                             <%=hotProducts[1].title%>
                                         </a>
                                     </p>
                                     <p class="price">
-                                        <%=hotProducts[1].price%>
+                                        $<%=hotProducts[1].price%>
                                     </p>
                                     <div class="buy_now text-right">
                                         <a href="<%=hotProducts[1].url%>"><button type="button" class="btn btn-danger">搶購</button></a>
@@ -137,12 +136,12 @@
                                 </div>
                                 <div class="col-12 col-lg-8">
                                     <p>
-                                        <a href="#">
+                                        <a href="<%=hotProducts[2].url%>">
                                             <%=hotProducts[2].title%>
                                         </a>
                                     </p>
                                     <p class="price">
-                                        <%=hotProducts[2].price%>
+                                        $<%=hotProducts[2].price%>
                                     </p>
                                     <div class="buy_now text-right">
                                         <a href="<%=hotProducts[2].url%>"><button type="button" class="btn btn-danger">搶購</button></a>

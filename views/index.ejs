@@ -7,13 +7,16 @@
                         <img src="/img/mainlg.png" id = "logo">
 
                         <form class="form-group" action="search" method = "get">
-                            <input type="text" class="form-control" placeholder="搜尋商品..." aria-label="搜尋商品..." name = "p_name">
+                            <input type="text" class="form-control" placeholder="搜尋商品..." aria-label="搜尋商品..." name = "keyword">
                             <div id="hotTag">
-                                <button type="button" class="btn btn-outline-warning">Fate / EXTELLA</button>
-                                <button type="button" class="btn btn-outline-warning">尼爾：自動人形</button>
-                                <button type="button" class="btn btn-outline-warning">Life is Strange</button>
-                                <button type="button" class="btn btn-outline-warning">食人巨鷹</button>
-                                <button type="button" class="btn btn-outline-warning">The Elder Scrolls V: Skyrim VR</button>
+                                <% var count = 0;
+                                 for(index in keywords){ %>
+                                    <a href = "search?keyword=<%=keywords[index].keyword%>"><button type="button" class="btn btn-outline-warning"><%=keywords[index].keyword%></button>
+                                <%
+                                    if(count > 3)
+                                        break;
+                                    count++;
+                                 } %>
                             </div>
                             <button class="btn btn-secondary" type = "submit">搜尋</button>
                         </form>
@@ -24,43 +27,48 @@
                                     <div class="carousel-item active">
                                         <div class="row">
                                             <div class="col-3">
-                                                <a href = "#"><img class="d-block w-100 mx-auto " src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" alt="First slide"></a>
+                                                <a href = "<%=discounts[0].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[0].product.image%>" alt="First slide"></a>
                                                 <div class="discount">
-                                                    <span class="rate">50%OFF</span>
+                                                    <span class="rate"><%=discounts[0].discountRate%>%OFF</span>
                                                     <p>
-                                                        <a href="#" class="gamename">PS4遊戲 PlayStation VR Worlds-中英文合版</a>
-                                                        <span class="price">$1790</span><br>
-                                                        <span class="website">PChome24hr</span>
+                                                        <a href="<%=discounts[0].product.url%>" class="gamename"><%=discounts[0].product.title%></a><br>
+                                                        <span class="price">$<%=discounts[0].product.price%></span><br>
+                                                        <span class="website"><%=discounts[0].product.website%></span>
                                                 </div>
                                             </div>
                                             <div class="col-3">
-                                                <a href = "#"><img class="d-block w-100 mx-auto " src="https://a.ecimg.tw/items/DGBJ85A9008GEVG/000001_1507186160.jpg" alt="First slide"></a>                                                
+                                                <a href="<%=discounts[1].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[1].product.image%>" alt="First slide"></a>
                                                 <div class="discount">
-                                                    <span class="rate">50%OFF</span>
+                                                    <span class="rate"><%=discounts[1].discountRate%>%OFF</span>
                                                     <p>
-                                                        <a href="#" class="gamename">PS4遊戲 PlayStation VR Worlds-中英文合版</a>
-                                                        <span class="price">$1790</span><br>
-                                                        <span class="website">PChome24hr</span>
+                                                        <a href="<%=discounts[1].product.url%>" class="gamename">
+                                                            <%=discounts[1].product.title%>
+                                                        </a><br>
+                                                        <span class="price">$<%=discounts[1].product.price%></span><br>
+                                                        <span class="website"><%=discounts[1].product.website%></span>
+                                                </div>
+                                            </div><div class="col-3">
+                                                <a href="<%=discounts[2].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[2].product.image%>" alt="First slide"></a>
+                                                <div class="discount">
+                                                    <span class="rate"><%=discounts[2].discountRate%>%OFF</span>
+                                                    <p>
+                                                        <a href="<%=discounts[2].product.url%>" class="gamename">
+                                                            <%=discounts[2].product.title%>
+                                                        </a><br>
+                                                        <span class="price">$<%=discounts[2].product.price%></span><br>
+                                                        <span class="website"><%=discounts[2].product.website%></span>
                                                 </div>
                                             </div>
                                             <div class="col-3">
-                                                <a href = "#"><img class="d-block w-100 mx-auto " src="https://a.ecimg.tw/items/DGBJ88A9008CIPM/000001_1510626067.jpg" alt="First slide"></a>                                              
+                                                <a href="<%=discounts[3].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[3].product.image%>" alt="First slide"></a>
                                                 <div class="discount">
-                                                    <span class="rate">50%OFF</span>
+                                                    <span class="rate"><%=discounts[3].discountRate%>%OFF</span>
                                                     <p>
-                                                        <a href="#" class="gamename">PS4遊戲 PlayStation VR Worlds-中英文合版</a>
-                                                        <span class="price">$1790</span><br>
-                                                        <span class="website">PChome24hr</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <a href = "#"><img class="d-block w-100 mx-auto " src="https://a.ecimg.tw/items/DGBJ85A9008GEVG/000001_1507186160.jpg" alt="First slide"></a>                                                
-                                                <div class="discount">
-                                                    <span class="rate">50%OFF</span>
-                                                    <p>
-                                                        <a href="#" class="gamename">PS4遊戲 PlayStation VR Worlds-中英文合版</a>
-                                                        <span class="price">$1790</span><br>
-                                                        <span class="website">PChome24hr</span>
+                                                        <a href="<%=discounts[3].product.url%>" class="gamename">
+                                                            <%=discounts[3].product.title%>
+                                                        </a><br>
+                                                        <span class="price">$<%=discounts[3].product.price%></span><br>
+                                                        <span class="website"><%=discounts[3].product.website%></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -68,41 +76,51 @@
                                   <div class="carousel-item">
                                         <div class="row">
                                             <div class="col-3">
-                                                <a href = "#"><img class="d-block w-100 mx-auto " src="https://a.ecimg.tw/items/DGBJ88A9008GOT3/000001_1507695369.jpg" alt="First slide"></a>                                                
+                                                <a href="<%=discounts[4].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[4].product.image%>" alt="First slide"></a>
                                                 <div class="discount">
-                                                    <span class = "rate">50%OFF</span><p>
-                                                    <a href="#" class = "gamename">PS4遊戲 PlayStation VR Worlds-中英文合版</a>
-                                                    <span class = "price">$1790</span><br>
-                                                    <span class = "website">PChome24hr</span>
+                                                    <span class="rate"><%=discounts[4].discountRate%>%OFF</span>
+                                                    <p>
+                                                        <a href="<%=discounts[4].product.url%>" class="gamename">
+                                                            <%=discounts[4].product.title%>
+                                                        </a><br>
+                                                        <span class="price">$<%=discounts[4].product.price%></span><br>
+                                                        <span class="website"><%=discounts[4].product.website%></span>
                                                 </div>
                                             </div>
                                             <div class="col-3">
-                                                <a href = "#"><img class="d-block w-100 mx-auto " src="https://a.ecimg.tw/items/DGBJ88A9008ECJ3/000001_1504871293.jpg" alt="First slide"></a>                                               
+                                                <a href="<%=discounts[5].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[5].product.image%>" alt="First slide"></a>
                                                 <div class="discount">
-                                                        <span class = "rate">50%OFF</span><p>
-                                                        <a href="#" class = "gamename">PS4遊戲 PlayStation VR Worlds-中英文合版</a>
-                                                        <span class = "price">$1790</span><br>
-                                                        <span class = "website">PChome24hr</span>
-                                                    </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <a href = "#"><img class="d-block w-100 mx-auto " src="https://a.ecimg.tw/items/DGBJ88A9008G1T6/000001_1510284199.jpg" alt="First slide"></a>                                             
-                                                <div class="discount">
-                                                    <span class="rate">50%OFF</span>
+                                                    <span class="rate"><%=discounts[5].discountRate%>%OFF</span>
                                                     <p>
-                                                        <a href="#" class="gamename">PS4遊戲 PlayStation VR Worlds-中英文合版</a>
-                                                        <span class="price">$1790</span><br>
-                                                        <span class="website">PChome24hr</span>
+                                                        <a href="<%=discounts[5].product.url%>" class="gamename">
+                                                            <%=discounts[5].product.title%>
+                                                        </a><br>
+                                                        <span class="price">$<%=discounts[5].product.price%></span><br>
+                                                        <span class="website"><%=discounts[5].product.website%></span>
                                                 </div>
                                             </div>
                                             <div class="col-3">
-                                                <a href = "#"><img class="d-block w-100 mx-auto " src="https://a.ecimg.tw/items/DGBJ88A9008ECJ3/000001_1504871293.jpg" alt="First slide"></a>                                               
+                                                <a href="<%=discounts[6].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[6].product.image%>" alt="First slide"></a>
                                                 <div class="discount">
-                                                    <span class="rate">50%OFF</span>
+                                                    <span class="rate"><%=discounts[6].discountRate%>%OFF</span>
                                                     <p>
-                                                        <a href="#" class="gamename">PS4遊戲 PlayStation VR Worlds-中英文合版</a>
-                                                        <span class="price">$1790</span><br>
-                                                        <span class="website">PChome24hr</span>
+                                                        <a href="<%=discounts[6].product.url%>" class="gamename">
+                                                            <%=discounts[6].product.title%>
+                                                        </a><br>
+                                                        <span class="price">$<%=discounts[6].product.price%></span><br>
+                                                        <span class="website"><%=discounts[6].product.website%></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <a href="<%=discounts[7].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[7].product.image%>" alt="First slide"></a>
+                                                <div class="discount">
+                                                    <span class="rate"><%=discounts[7].discountRate%>%OFF</span>
+                                                    <p>
+                                                        <a href="<%=discounts[7].product.url%>" class="gamename">
+                                                            <%=discounts[7].product.title%>
+                                                        </a><br>
+                                                        <span class="price">$<%=discounts[7].product.price%></span><br>
+                                                        <span class="website"><%=discounts[7].product.website%></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -110,43 +128,51 @@
                                     <div class="carousel-item">
                                         <div class="row">
                                             <div class="col-3">
-                                                <a href = "#"><img class="d-block w-100 mx-auto " src="https://a.ecimg.tw/items/DGBJBMA9008HMEJ/000001_1508740564.jpg" alt="First slide"></a>                                                
+                                                <a href="<%=discounts[8].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[8].product.image%>" alt="First slide"></a>
                                                 <div class="discount">
-                                                    <span class="rate">50%OFF</span>
+                                                    <span class="rate"><%=discounts[8].discountRate%>%OFF</span>
                                                     <p>
-                                                        <a href="#" class="gamename">PS4遊戲 PlayStation VR Worlds-中英文合版</a>
-                                                        <span class="price">$1790</span><br>
-                                                        <span class="website">PChome24hr</span>
+                                                        <a href="<%=discounts[8].product.url%>" class="gamename">
+                                                            <%=discounts[8].product.title%>
+                                                        </a><br>
+                                                        <span class="price">$<%=discounts[8].product.price%></span><br>
+                                                        <span class="website"><%=discounts[8].product.website%></span>
                                                 </div>
                                             </div>
                                             <div class="col-3">
-                                                <a href = "#"><img class="d-block w-100 mx-auto " src="https://a.ecimg.tw/items/DGBJ88A9008G1S9/000001_1506740780.jpg" alt="First slide"></a>                                              
+                                                <a href="<%=discounts[9].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[9].product.image%>" alt="First slide"></a>
                                                 <div class="discount">
-                                                    <span class="rate">50%OFF</span>
+                                                    <span class="rate"><%=discounts[9].discountRate%>%OFF</span>
                                                     <p>
-                                                        <a href="#" class="gamename">PS4遊戲 PlayStation VR Worlds-中英文合版</a>
-                                                        <span class="price">$1790</span><br>
-                                                        <span class="website">PChome24hr</span>
+                                                        <a href="<%=discounts[1].product.url%>" class="gamename">
+                                                            <%=discounts[9].product.title%>
+                                                        </a><br>
+                                                        <span class="price">$<%=discounts[9].product.price%></span><br>
+                                                        <span class="website"><%=discounts[9].product.website%></span>
                                                 </div>
                                             </div>
                                             <div class="col-3">
-                                                <a href = "#"><img class="d-block w-100 mx-auto " src="https://a.ecimg.tw/items/DGBJ88A9006IDHN/000001_1478482348.jpg" alt="First slide"></a>                                                
+                                                <a href="<%=discounts[10].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[10].product.image%>" alt="First slide"></a>
                                                 <div class="discount">
-                                                    <span class="rate">50%OFF</span>
+                                                    <span class="rate"><%=discounts[10].discountRate%>%OFF</span>
                                                     <p>
-                                                        <a href="#" class="gamename">PS4遊戲 PlayStation VR Worlds-中英文合版</a>
-                                                        <span class="price">$1790</span><br>
-                                                        <span class="website">PChome24hr</span>
+                                                        <a href="<%=discounts[10].product.url%>" class="gamename">
+                                                            <%=discounts[10].product.title%>
+                                                        </a><br>
+                                                        <span class="price">$<%=discounts[10].product.price%></span><br>
+                                                        <span class="website"><%=discounts[10].product.website%></span>
                                                 </div>
                                             </div>
                                             <div class="col-3">
-                                                <a href = "#"><img class="d-block w-100 mx-auto " src="https://a.ecimg.tw/items/DGBJ88A9008ECJ3/000001_1504871293.jpg" alt="First slide"></a>                                                
+                                                <a href="<%=discounts[11].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[11].product.image%>" alt="First slide"></a>
                                                 <div class="discount">
-                                                    <span class="rate">50%OFF</span>
+                                                    <span class="rate"><%=discounts[11].discountRate%>%OFF</span>
                                                     <p>
-                                                        <a href="#" class="gamename">PS4遊戲 PlayStation VR Worlds-中英文合版</a>
-                                                        <span class="price">$1790</span><br>
-                                                        <span class="website">PChome24hr</span>
+                                                        <a href="<%=discounts[11].product.url%>" class="gamename">
+                                                            <%=discounts[11].product.title%>
+                                                        </a><br>
+                                                        <span class="price">$<%=discounts[11].product.price%></span><br>
+                                                        <span class="website"><%=discounts[11].product.website%></span>
                                                 </div>
                                             </div>
                                         </div>
