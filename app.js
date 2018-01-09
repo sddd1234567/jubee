@@ -661,14 +661,20 @@ async function updateDataBase(){
         await getmyfoneSearchData(pchomeProducts[i].title).then(
             products => Array.prototype.push.apply(data, products)
         );
-        for(index in data)
-        {
-            for(key in filter_keywords)
-            {
-                if (wildcard(data[index].title.toLowerCase(), '*' + filter_keywords[key].toLowerCase() + '*'))
-                    data.splice(index,1);
+
+        data = data.filter(function (el) {
+            var flag = true;
+            for (key in filter_keywords) {
+                if (wildcard(el.title.toLowerCase(), '*' + filter_keywords[key].toLowerCase() + '*'))
+                {
+                    flag = false;
+                    console.log("移除" + el.title);
+                }
+                    
             }
-        }
+            return flag;
+        });
+
         admin.database().ref('PChome').child(i).set(data);
     }
     console.log("end");
@@ -957,7 +963,7 @@ function reverseOrder(object){
 }
 
 // getMomoSearchData("上古卷軸");
-// updateDataBase();
+updateDataBase();
 
 setInterval(updateDataBase, 1000*60*15);
 
