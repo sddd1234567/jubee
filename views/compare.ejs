@@ -29,18 +29,23 @@
                                 <% for(p in productList){ %>
                                 <tr>
                                     <td style="width:33%;">
-                                        <a href="<%= productList[p].url %>">
+                                        <a href="javascript:clickLink({title: '<%=productList[p].title%>', price: <%=productList[p].price%>, website: '<%=productList[p].website%>', url: '<%=productList[p].url%>',image: '<%=productList[p].image%>'})">
                                             <center><img class="d-block" src="<%= productList[p].image %>" style="margin-left:unset!important;"></center>
                                         </a>
                                     </td>
 
                                     <td>
-                                        <p><a href="<%= productList[p].url %>"><%= productList[p].title %></a></p>
+                                        <p><a href="javascript:clickLink({title: '<%=productList[p].title%>', price: <%=productList[p].price%>, website: '<%=productList[p].website%>', url: '<%=productList[p].url%>',image: '<%=productList[p].image%>'})"><%= productList[p].title %></a></p>
                                         <p><%= productList[p].website %></p>
                                         <p class="price">$<%= productList[p].price %></p>
                                         <div class="result_buttons">
-                                            <a href = "<%= productList[p].url %>"><button type="button" class="btn btn-info">前往購買</button></a>
-                                            <button type="button" class="btn btn-warning">收藏</button>
+                                            <a href = "javascript:clickLink({title: '<%=productList[p].title%>', price: <%=productList[p].price%>, website: '<%=productList[p].website%>', url: '<%=productList[p].url%>',image: '<%=productList[p].image%>'})"><button type="button" class="btn btn-info">前往購買</button></a>
+                                            <% if(!productList[p].isCollected){ %>
+                                                <a id = "collect_<%=p%>" href = "javascript:addToCollect({title: '<%=productList[p].title%>', price: <%=productList[p].price%>, website: '<%=productList[p].website%>', url: '<%=productList[p].url%>',image: '<%=productList[p].image%>'},<%=p%>)"><button type="button" class="btn btn-warning">收藏</button></a>
+                                            <% } %>
+                                            <% if(productList[p].isCollected){ %>
+                                                已加入收藏
+                                            <% } %>
                                         </div>
                                     </td>
                                 </tr>
@@ -55,14 +60,20 @@
                         <div class="card-body">
                             <div class="hot_item">
                                 <div class="row">
-                                    <div class="col-12 col-md-4">
-                                        <img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;">
+                                    <div class="col-12 col-lg-4">
+                                        <center><img class="d-block" src="<%=hotProducts[0].image%>" style="margin-left:unset!important;"></center>
                                     </div>
-                                    <div class="col-12 col-md-8">
-                                        <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
-                                        <p class="price">$1690</p>
+                                    <div class="col-12 col-lg-8">
+                                        <p>
+                                            <a href="#">
+                                                <%=hotProducts[0].title%>
+                                            </a>
+                                        </p>
+                                        <p class="price">
+                                            <%=hotProducts[0].price%>
+                                        </p>
                                         <div class="buy_now text-right">
-                                            <button type="button" class="btn btn-danger">搶購</button>
+                                            <a href="<%=hotProducts[0].url%>"><button type="button" class="btn btn-danger">搶購</button></a>
                                         </div>
                                     </div>
                                 </div>
@@ -70,14 +81,20 @@
                             </div>
                             <div class="hot_item">
                                 <div class="row">
-                                    <div class="col-12 col-md-4">
-                                        <img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;">
+                                    <div class="col-12 col-lg-4">
+                                        <center><img class="d-block" src="<%=hotProducts[1].image%>" style="margin-left:unset!important;"></center>
                                     </div>
-                                    <div class="col-12 col-md-8">
-                                        <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
-                                        <p class="price">$1690</p>
+                                    <div class="col-12 col-lg-8">
+                                        <p>
+                                            <a href="#">
+                                                <%=hotProducts[1].title%>
+                                            </a>
+                                        </p>
+                                        <p class="price">
+                                            <%=hotProducts[1].price%>
+                                        </p>
                                         <div class="buy_now text-right">
-                                            <button type="button" class="btn btn-danger">搶購</button>
+                                            <a href="<%=hotProducts[1].url%>"><button type="button" class="btn btn-danger">搶購</button></a>
                                         </div>
                                     </div>
                                 </div>
@@ -85,14 +102,20 @@
                             </div>
                             <div class="hot_item">
                                 <div class="row">
-                                    <div class="col-12 col-md-4">
-                                        <img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;">
+                                    <div class="col-12 col-lg-4">
+                                        <center><img class="d-block" src="<%=hotProducts[2].image%>" style="margin-left:unset!important;"></center>
                                     </div>
-                                    <div class="col-12 col-md-8">
-                                        <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
-                                        <p class="price">$1690</p>
+                                    <div class="col-12 col-lg-8">
+                                        <p>
+                                            <a href="#">
+                                                <%=hotProducts[2].title%>
+                                            </a>
+                                        </p>
+                                        <p class="price">
+                                            <%=hotProducts[2].price%>
+                                        </p>
                                         <div class="buy_now text-right">
-                                            <button type="button" class="btn btn-danger">搶購</button>
+                                            <a href="<%=hotProducts[2].url%>"><button type="button" class="btn btn-danger">搶購</button></a>
                                         </div>
                                     </div>
                                 </div>

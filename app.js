@@ -1,12 +1,16 @@
 var express = require('express');
+var session = require('express-session');
 var app = express();
+app.use(session({ secret: 'mysupersecret', resave: false, saveUninitialized: false }));
 var bodyParser = require('body-parser');
-var port = Number(process.env.PORT || 3000);
+var port = Number(process.env.PORT || '3000');
 var cookieParser = require('cookie-parser');
 var engine = require('ejs-locals');
 var path = require('path');
 const puppeteer = require('puppeteer');
 var wildcard = require('node-wildcard');
+var fireAuth = require("./service/fireAuth");
+// var fireData = require("./service/fireData");
 
 app.engine('ejs', engine);
 app.set('views', path.join(__dirname, 'views'));
@@ -18,6 +22,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 
+
+
 var admin = require("firebase-admin");
 var serviceAccount = require("./jubeecompare-firebase-adminsdk-f9u14-50866585c5.json");
 admin.initializeApp({
@@ -25,17 +31,37 @@ admin.initializeApp({
     databaseURL: "https://jubeecompare.firebaseio.com"
 });
 
+var hotProducts;
 
+admin.database().ref('hotProducts').on('value', function (snapshot) {
+    var productList = snapshot.val();
+    var products = new Array();
+    if(productList != null && Object.keys(productList).length > 2)
+    {
+        for(index in productList)
+        {
+            products.push(productList[index]);
+        }
 
+        products = products.sort(function (a, b) {
+            return b.clickTimes - a.clickTimes;
+        });
+        hotProducts = products;
+    }
+})
 
 
 app.get('/', function (req, res) {
-    res.render('index', { title: "啾比比價網--首頁" });
+    var auth = req.session.uid;
+    var username = auth ? req.session.mail : '訪客';
+    res.render('index', { title: "啾比比價網--首頁", username: username});
 });
 
 app.get('/search', async function (req, res) {
     var productList;
-
+    var auth = req.session.uid;
+    var username = auth ? req.session.mail : '訪客';
+    console.log(username);
     if (req.query.p_name != undefined && req.query.p_name != "")
     {
         var title = req.query.p_name;
@@ -74,7 +100,7 @@ app.get('/search', async function (req, res) {
                 }
                     
             }
-            res.render('search', { title: "啾比比價網--搜尋結果", classify: "search", productList: products, keyword: title });
+            res.render('search', { title: "啾比比價網--搜尋結果", classify: "search", productList: products, keyword: title, username: username, hotProducts: hotProducts });
         }).catch(function (e) {
             console.log(e);
         });
@@ -87,23 +113,65 @@ app.get('/search', async function (req, res) {
 });
 
 app.get('/history', function (req, res) {
-    res.render('history', { title: "啾比比價網--歷史紀錄",classify:"history"});
+    var auth = req.session.uid;
+    var username = auth ? req.session.mail : '訪客';
+    var keyword;
+    if(req.query.keyword != undefined)
+        keyword = req.query.keyword;
+
+    if(auth)
+    {
+        admin.database().ref('history/' + auth).once('value').then(function (snapshot) {
+            var history = reverseOrder(snapshot.val());
+            res.render('history', { title: "啾比比價網--歷史紀錄", classify: "history", username: username, keyword: keyword, history: history, hotProducts: hotProducts });
+        })
+    }
+    else
+    {
+        res.redirect('/');
+    }
+    
 });
 
 app.get('/collect', function (req, res) {
-    res.render('collect', { title: "啾比比價網--我的收藏", classify: "collect" });
+    var auth = req.session.uid;
+    var username = auth ? req.session.mail : '訪客';
+    var keyword;
+    if (req.query.keyword != undefined)
+        keyword = req.query.keyword;
+    if(auth)
+    {        
+        admin.database().ref('collect/' + auth).once('value', function (snapshot) {
+            var collections = reverseOrder(snapshot.val());
+            res.render('collect', { title: "啾比比價網--我的收藏", classify: "collect", username: username, collections: collections, keyword: keyword, hotProducts: hotProducts});
+        })
+    }
+    else
+        res.redirect('/');
+    
 });
 
 app.get('/compare', function (req, res) {
     var productList;
-
+    var auth = req.session.uid;
+    var username = auth ? req.session.mail : '訪客';
+    console.log(username);
     if (req.query.p_id != undefined && req.query.p_id != "" && req.query.keyword != undefined && req.query.keyword != "")
     {
         var p_id = req.query.p_id;
-        var keyword = req.query.keyword
+        var keyword = req.query.keyword;
+        var minPrice = 99999999;
+        var maxPrice = 0;
+
+        var keyword = "";
+        if (req.query.keyword != undefined)
+            keyword = req.query.keyword;
+        
         admin.database().ref('PChome/'+p_id).once('value').then(function (snapshot) {
-            var result = snapshot.val();
             let products = new Array();
+            var rIndex = new Array();
+            var result = snapshot.val();
+            var productCount = 0;
             for (var r in result) {
                 var keywords = keyword.split(' ');
                 var flag = false;
@@ -114,13 +182,64 @@ app.get('/compare', function (req, res) {
                 }
                 if (!flag)
                 {
-                    products.push({ title: result[r].title, price: result[r].price.replace(',', ""), image: result[r].image, url: result[r].url, website: result[r].website});
-                }                    
+                    rIndex.push(r);
+                    if(!auth)
+                        products.push({ title: result[r].title, price: result[r].price.replace(',', ""), image: result[r].image, url: result[r].url, website: result[r].website, isCollected: false });
+                    
+                }               
             }
-            products = products.sort(function (a, b) {
-                return a.price - b.price;
-            });
-            res.render('compare', { title: result[0].title + " - 比價 - 啾比比價網", classify: "search", productList: products, p_name: result[0].title });
+            if(!auth)
+            {
+                products = products.sort(function (a, b) {
+                    return a.price - b.price;
+                });
+                res.render('compare', { title: result[0].title + " - 比價 - 啾比比價網", classify: "search", productList: products, p_name: result[0].title, username: username, keyword: keyword, hotProducts: hotProducts });
+            }
+               
+            else{
+                admin.database().ref('collect/' + auth).once('value').then(function (snapshott) {
+                    var list = snapshott.val();                    
+                    for (var index in rIndex) {
+                        var isCollected = false;
+                        for (var collectProduct in list) {                            
+                            if (list[collectProduct].url === result[rIndex[index]].url) {
+                                isCollected = true;
+                                break;
+                            }
+                        }
+                        productCount++;
+                        if (parseInt(result[rIndex[index]].price.replace(',', "")) > parseInt(maxPrice))
+                        {
+                            maxPrice = result[rIndex[index]].price.replace(',', "");
+                        }
+                           
+                        if (parseInt(result[rIndex[index]].price.replace(',', "")) < parseInt(minPrice))
+                            minPrice = result[rIndex[index]].price.replace(',', "");
+
+                        if (!isCollected)
+                            products.push({ title: result[rIndex[index]].title, price: result[rIndex[index]].price.replace(',', ""), image: result[rIndex[index]].image, url: result[rIndex[index]].url, website: result[rIndex[index]].website, isCollected: false });
+                        else
+                            products.push({ title: result[rIndex[index]].title, price: result[rIndex[index]].price.replace(',', ""), image: result[rIndex[index]].image, url: result[rIndex[index]].url, website: result[rIndex[index]].website, isCollected: true });
+                    }
+                    products = products.sort(function (a, b) {
+                        return a.price - b.price;
+                    });
+                    res.render('compare', { title: result[0].title + " - 比價 - 啾比比價網", classify: "search", productList: products, p_name: result[0].title, username: username, keyword: keyword, hotProducts: hotProducts });
+                
+                    admin.database().ref('history/' + auth).once('value').then(function (historyList) {
+                        var history = historyList.val();
+                        for (hIndex in history) {
+                            if (history[hIndex].p_id == p_id && history[hIndex].keyword == keyword) {
+                                admin.database().ref('history/' + auth).child(hIndex).remove();
+                            }
+                        }
+                        admin.database().ref('history/' + auth).push({ title: result[0].title, image: result[0].image, productCount: productCount, minPrice: minPrice, maxPrice: maxPrice, p_id: p_id, keyword: keyword });
+                    })
+                })
+            }
+
+            
+            
         }).catch(function (e) {
             console.log(e);
         });
@@ -131,6 +250,130 @@ app.get('/compare', function (req, res) {
     }
 });
 
+app.post('/signup', function(req,res){
+    let email = req.body.email;
+    let password = req.body.passwd;
+    let password_check = req.body.pwd_check;
+    if(password == password_check)
+    {
+        fireAuth.createUserWithEmailAndPassword(email, password)
+            .then(function (user) {
+                let saveUser = {
+                    'email': email,
+                    'password': password,
+                    'user_type': "member",
+                    'created_at': new Date(),
+                    'updated_at': new Date(),
+                    'key': user.uid
+                };
+                let ref = admin.database().ref('/users/' + user.uid);
+                ref.set(saveUser);
+                fireAuth.signInWithEmailAndPassword(email, password)
+                    .then(function (user) {
+                        res.redirect('/');
+                    })
+                    .catch(function (error) {
+                        res.redirect('/');
+                    });
+            })
+            .catch(function (error) {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                return res.redirect('/');
+            });
+    }
+        
+    
+})
+
+app.post('/login', function(req,res){
+    fireAuth.signInWithEmailAndPassword(req.body.email, req.body.passwd)
+        .then(function (user) {
+            req.session.uid = user.uid;
+            req.session.mail = req.body.email;
+            console.log(req.session.mail)
+            backURL = req.header('Referer') || '/';
+            res.redirect(backURL);
+        })
+        .catch(function (error) {
+            console.log(error)
+            backURL = req.header('Referer') || '/';
+            res.redirect(backURL);
+        });
+})
+
+app.post('/addtocollection', function(req,res){
+    var title = req.body.title;
+    var price = req.body.price;
+    var image = req.body.image;
+    var website = req.body.website;
+    var url = req.body.urll;
+    console.log(url);
+    var uid = req.session.uid;
+    var product = {title: title, price: price, image: image, website: website, url: url};
+    if(product != undefined && uid)
+    {
+        console.log(product);
+        admin.database().ref('collect/'+uid).push(product);
+        res.send("成功加入收藏")
+    }
+    else
+    {
+        res.send("收藏");
+    }
+})  
+
+app.post('/clicklink', function (req, res) {
+    var title = req.body.title;
+    console.log(title);
+    var price = req.body.price;
+    var image = req.body.image;
+    var website = req.body.website;
+    var url = req.body.urll;
+    var uid = req.session.uid;
+        admin.database().ref('hotProducts').once('value').then(function(snapshot){
+            var products = snapshot.val();
+            console.log("gettt");
+            var flag = false;
+            var targetIndex;
+            var clickTimes = 1;
+            if(products != null)
+            {
+                for (index in products) {
+                    if (products[index].url === url) {
+                        flag = true;
+                        targetIndex = index;
+                        clickTimes = products[index].clickTimes+1;
+                        break;
+                    }
+                }
+                console.log(flag);
+                if (flag) {
+                    admin.database().ref('hotProducts').child(targetIndex).set({ clickTimes: clickTimes, title: products[targetIndex].title, price: products[targetIndex].price, image: products[targetIndex].image, website: products[targetIndex].website, url: products[targetIndex].url });
+                }
+
+                else {
+                    admin.database().ref('hotProducts').push({ clickTimes: clickTimes, title: title, price: price, image: image, website: website, url: url });
+                }
+            }            
+            else
+                admin.database().ref('hotProducts').push({ clickTimes: clickTimes, title: title, price: price, image: image, website: website, url: url });
+        })
+})  
+
+app.post('/removefromcollections',function(req,res){
+    var key = req.body.key
+    var auth = req.session.uid;
+    if(key != undefined && key != "" && auth)
+    {
+        admin.database().ref('collect/'+auth).child(key).remove();
+        res.send("移除收藏成功");
+    }
+    else
+    {
+        res.send("移除收藏失敗");
+    }
+})
 
 
 async function initialPChomeDataBase(){
@@ -426,8 +669,22 @@ async function searchPCHomeDataFromFirebase(title,result) {
     return products;
 }
 
+function reverseOrder(object)
+{
+    var keys = [];
+    var newObject = [];
+    for (var key in object) {
+        keys.push(key);
+    }
+    for (var j = keys.length - 1; j >= 0; j--) {
+        var value = object[keys[j]];
+        newObject[keys[j]] = value;
+    }
+    return newObject;
+}
+
 // getMomoSearchData("上古卷軸");
-initialPChomeDataBase();
+// initialPChomeDataBase();
 
 setInterval(initialPChomeDataBase, 1000*60*15);
 

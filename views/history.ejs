@@ -7,7 +7,7 @@
                     <div class="col-12 col-lg-9">
                         <nav aria-label="breadcrumb" class="index" role="navigation">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="#">啾比比價</a></li>
+                                <li class="breadcrumb-item"><a href="/">啾比比價</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">瀏覽紀錄</li>
                             </ol>
                         </nav>
@@ -16,111 +16,25 @@
                 <div class="table-list">
                     <table class="table" id="search_result">
                         <tbody>
+                            <% for(index in history){ %>
                             <tr>
                                 <td style = "width:33%;">
-                                    <a href="#">
-                                        <center><img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;"></center>
+                                    <a href="compare?p_id=<%=history[index].p_id%>&keyword=<%=history[index].keyword%>">
+                                        <center><img class="d-block" src="<%=history[index].image%>" style="margin-left:unset!important;"></center>
                                     </a>
                                 </td>
 
                                 <td>
-                                    <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
-                                    <p>共7筆商品</p>
-                                    <p class="price">$1490~$1790</p>
+                                    <p><a href="compare?p_id=<%=history[index].p_id%>&keyword=<%=history[index].keyword%>"><%=history[index].title%></a></p>
+                                    <p>共<%=history[index].productCount%>筆商品</p>
+                                    <p class="price">$<%=history[index].minPrice%>~$<%=history[index].maxPrice%></p>
                                     <div class="result_buttons">
-                                        <button type="button" class="btn btn-info">比較價格</button>
-                                        <button type="button" class="btn btn-warning">收藏</button>
+                                        <a href = "compare?p_id=<%=history[index].p_id%>&keyword=<%=history[index].keyword%>"><button type="button" class="btn btn-info">比較價格</button></a>
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td style = "width:33%;">
-                                    <a href="#">
-                                        <center><img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;"></center>
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
-                                    <p>共7筆商品</p>
-                                    <p class="price">$1490~$1790</p>
-                                    <div class="result_buttons">
-                                        <button type="button" class="btn btn-info">比較價格</button>
-                                        <button type="button" class="btn btn-warning">收藏</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a href="#" style = "width:33%;">
-                                        <center><img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;"></center>
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
-                                    <p>共7筆商品</p>
-                                    <p class="price">$1490~$1790</p>
-                                    <div class="result_buttons">
-                                        <button type="button" class="btn btn-info">比較價格</button>
-                                        <button type="button" class="btn btn-warning">收藏</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a href="#" style="width:33%;">
-                                        <center><img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg"
-                                                style="margin-left:unset!important;"></center>
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
-                                    <p>共7筆商品</p>
-                                    <p class="price">$1490~$1790</p>
-                                    <div class="result_buttons">
-                                        <button type="button" class="btn btn-info">比較價格</button>
-                                        <button type="button" class="btn btn-warning">收藏</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a href="#" style="width:33%;">
-                                        <center><img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg"
-                                                style="margin-left:unset!important;"></center>
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
-                                    <p>共7筆商品</p>
-                                    <p class="price">$1490~$1790</p>
-                                    <div class="result_buttons">
-                                        <button type="button" class="btn btn-info">比較價格</button>
-                                        <button type="button" class="btn btn-warning">收藏</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a href="#" style="width:33%;">
-                                        <center><img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg"
-                                                style="margin-left:unset!important;"></center>
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
-                                    <p>共7筆商品</p>
-                                    <p class="price">$1490~$1790</p>
-                                    <div class="result_buttons">
-                                        <button type="button" class="btn btn-info">比較價格</button>
-                                        <button type="button" class="btn btn-warning">收藏</button>
-                                    </div>
-                                </td>
-                            </tr>
+                            <% } %>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -131,14 +45,20 @@
                     <div class="card-body">
                         <div class="hot_item">
                             <div class="row">
-                                <div class="col-12 col-md-4">
-                                    <img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;">
+                                <div class="col-12 col-lg-4">
+                                    <center><img class="d-block" src="<%=hotProducts[0].image%>" style="margin-left:unset!important;"></center>
                                 </div>
-                                <div class="col-12 col-md-8">
-                                    <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
-                                    <p class="price">$1490~$1790</p>
+                                <div class="col-12 col-lg-8">
+                                    <p>
+                                        <a href="#">
+                                            <%=hotProducts[0].title%>
+                                        </a>
+                                    </p>
+                                    <p class="price">
+                                        <%=hotProducts[0].price%>
+                                    </p>
                                     <div class="buy_now text-right">
-                                        <button type="button" class="btn btn-danger">搶購</button>
+                                        <a href="<%=hotProducts[0].url%>"><button type="button" class="btn btn-danger">搶購</button></a>
                                     </div>
                                 </div>
                             </div>
@@ -146,14 +66,20 @@
                         </div>
                         <div class="hot_item">
                             <div class="row">
-                                <div class="col-12 col-md-4">
-                                    <img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;">
+                                <div class="col-12 col-lg-4">
+                                    <center><img class="d-block" src="<%=hotProducts[1].image%>" style="margin-left:unset!important;"></center>
                                 </div>
-                                <div class="col-12 col-md-8">
-                                    <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
-                                    <p class="price">$1490~$1790</p>
+                                <div class="col-12 col-lg-8">
+                                    <p>
+                                        <a href="#">
+                                            <%=hotProducts[1].title%>
+                                        </a>
+                                    </p>
+                                    <p class="price">
+                                        <%=hotProducts[1].price%>
+                                    </p>
                                     <div class="buy_now text-right">
-                                        <button type="button" class="btn btn-danger">搶購</button>
+                                        <a href="<%=hotProducts[1].url%>"><button type="button" class="btn btn-danger">搶購</button></a>
                                     </div>
                                 </div>
                             </div>
@@ -161,14 +87,20 @@
                         </div>
                         <div class="hot_item">
                             <div class="row">
-                                <div class="col-12 col-md-4">
-                                    <img class="d-block" src="https://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg" style="margin-left:unset!important;">
+                                <div class="col-12 col-lg-4">
+                                    <center><img class="d-block" src="<%=hotProducts[2].image%>" style="margin-left:unset!important;"></center>
                                 </div>
-                                <div class="col-12 col-md-8">
-                                    <p><a href="#">PS4 VR《上古卷軸5:無界天際》中英文版</a></p>
-                                    <p class="price">$1490~$1790</p>
+                                <div class="col-12 col-lg-8">
+                                    <p>
+                                        <a href="#">
+                                            <%=hotProducts[2].title%>
+                                        </a>
+                                    </p>
+                                    <p class="price">
+                                        <%=hotProducts[2].price%>
+                                    </p>
                                     <div class="buy_now text-right">
-                                        <button type="button" class="btn btn-danger">搶購</button>
+                                        <a href="<%=hotProducts[2].url%>"><button type="button" class="btn btn-danger">搶購</button></a>
                                     </div>
                                 </div>
                             </div>

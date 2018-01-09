@@ -10,9 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
     "ejs-locals": "^1.0.2",
     "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "firebase": "^4.8.1",
     "firebase-admin": "^5.7.0",
     "node-wildcard": "0.0.9",
     "puppeteer": "^0.13.0"
