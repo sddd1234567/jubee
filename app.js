@@ -12,7 +12,9 @@ var wildcard = require('node-wildcard');
 var fireAuth = require("./service/fireAuth");
 // var fireData = require("./service/fireData");
 
-
+var resemble = require('./public/js/resemble.js');
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+// const compareImages = require('resemblejs/compareImages');
 app.engine('ejs', engine);
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, '/public')));
@@ -36,15 +38,30 @@ var hotProducts;
 var hotKeywords;
 var discounts;
 
+var compareBrowser;
 
-(async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto('http://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg');
-    await page.screenshot({ path: 'public/img/example.png' });
+var productBrowser;
 
-    await browser.close();
-})();
+async function initialBrowser()
+{
+    compareBrowser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+}
+
+async function compareImage(image1,image2){
+    if(!compareBrowser)
+        await initialBrowser();
+    const page = await compareBrowser.newPage();
+    await page.goto('http://localhost:3000/c?image1=' + encodeURIComponent(image1) + "&image2=" + encodeURIComponent(image2));
+    await page.waitFor('#content');
+    const result = await page.evaluate(() => {
+        let title = document.querySelector('#content').innerText;
+
+        return title;
+    });
+    // console.log(result);
+    return result;
+}
+
 
 admin.database().ref('hotProducts').on('value', function (snapshot) {
     var productList = snapshot.val();
@@ -101,7 +118,8 @@ admin.database().ref('PChome').on('value',function(snapshot){
             middle = 0;
         //  console.log(newObject[middle].price);
          var discountRate = Math.ceil((1 - parseFloat(newObject[0].price.replace(',',"")) / parseFloat(newObject[middle].price.replace(',',""))) * 100);
-        newDiscounts.push({ product: newObject[0], discountRate: discountRate });
+        if(discountRate > 0)
+            newDiscounts.push({ product: newObject[0], discountRate: discountRate });
     }
     newDiscounts = newDiscounts.sort(function (a, b) {
         return b.discountRate - a.discountRate;
@@ -109,10 +127,14 @@ admin.database().ref('PChome').on('value',function(snapshot){
     discounts = newDiscounts;
 })
 
+app.get('/c',function(req,res){
+    res.render('c');
+})
 
 app.get('/', function (req, res) {
     var auth = req.session.uid;
     var username = auth ? req.session.mail : '訪客';
+    
     res.render('index', { title: "啾比比價網--首頁", username: username, keywords: hotKeywords, discounts: discounts});
 });
 
@@ -654,6 +676,10 @@ function checkWebsiteFilter(website, website_filter){
 async function updateDataBase(){
     var pchomeProducts;
     var filter_keywords = ["Camera", "頭戴", "VR MOVE", "FlashFire", "動態控制器", "攝影機", "防塵組", "集線器", "充電底座", "風扇", "方向盤", "同捆", "主機","手把防滑矽膠保護套","防汗"];
+
+    if(!productBrowser)
+        productBrowser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+
     await getPCHomeData().then(
         products => pchomeProducts = products
     );
@@ -672,6 +698,26 @@ async function updateDataBase(){
             products => Array.prototype.push.apply(data, products)
         );
 
+        for(var k = 1; k < data.length; k++)
+        {
+            var rate;
+            await compareImage(pchomeProducts[i].image, data[k].image).then(
+                result => rate = result
+            )
+            console.log(rate);
+            if(parseFloat(rate) > 25.2)
+            {
+                console.log("移除" + data[k].title);
+                data.splice(k,1);
+                k--;
+            }
+            else
+            {
+                console.log("留下" + data[k].title);
+            }
+        }
+
+        
         data = data.filter(function (el) {
             var flag = true;
             for (key in filter_keywords) {
@@ -679,12 +725,11 @@ async function updateDataBase(){
                 {
                     
                     flag = false;
-                    console.log("移除" + el.title);
+                    // console.log("移除" + el.title);
                 }
             }
-            // getDiff(el.image, el.image).then(
-            //     data => console.log(data.misMatchPercentage)
-            // );
+
+            
             return flag;
         });
 
@@ -695,8 +740,7 @@ async function updateDataBase(){
 
 
 async function getPCHomeData() {
-    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] } );
-    const page = await browser.newPage();
+    const page = await productBrowser.newPage();
     await page.goto('https://24h.pchome.com.tw/store/DGBJAJ?style=2');
     const result = await page.evaluate(() => {
         let title_data = [];
@@ -739,16 +783,13 @@ async function getPCHomeData() {
         products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text, url: result.url_data[r].text, website: "PChome24h" });
     }
 
-
-    await browser.close();
     return products;
 }
 
 async function getFridaySearchData(searchTitle) {
     console.log("friday start");
-    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] } );
     // const browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
+    const page = await productBrowser.newPage();
     await page.goto('https://shopping.friday.tw/1/0/3/7122/202775/211216.html', { timeout: 0 });
     await page.waitFor('#keyword');
     await page.click('#keyword');
@@ -794,15 +835,13 @@ async function getFridaySearchData(searchTitle) {
         products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text, url: result.url_data[r].text, website: "Friday" });
     }
 
-    await browser.close();
     return products;
 }
 
 async function getMomoSearchData(searchTitle) {
     console.log("Momo start");
-    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
     // const browser = await puppeteer.launch({headless: false});
-    const page = await browser.newPage();
+    const page = await productBrowser.newPage();
     try{
         page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
         await page.goto('https://www.momoshop.com.tw/search/searchShop.jsp?keyword=' + searchTitle, { timeout: 0 });
@@ -859,15 +898,13 @@ async function getMomoSearchData(searchTitle) {
         products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text, url: result.url_data[r].text, website: "Momo" });
     }
     // console.log(products);
-    await browser.close();    
     return products;
 }
 
 async function getmyfoneSearchData(searchTitle) {
     console.log("myfone start");
-    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] } );
     // const browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
+    const page = await productBrowser.newPage();
     try {
         await page.goto('https://search.myfone.com.tw/searchResult.php?sort_id=ID_4726&keyword=' + searchTitle, { timeout: 0 });
         await page.waitFor('#rightBox');
@@ -914,7 +951,6 @@ async function getmyfoneSearchData(searchTitle) {
         products.push({ title: result.title_data[r].text, price: result.price_data[r].text, image: result.img_data[r].text, url: result.url_data[r].text, website: "myfone" });
     }
 
-    await browser.close();
     return products;
 }
 
@@ -977,7 +1013,7 @@ function reverseOrder(object){
 
 
 // getMomoSearchData("上古卷軸");
-// updateDataBase();
+updateDataBase();
 
 setInterval(updateDataBase, 1000*60*15);
 

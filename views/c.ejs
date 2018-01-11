@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src = "js/resemble.js"></script>
+</head>
+<body>
+    <div id="container">
+        
+    </div>
+    <script>    
+
+    var reg = new RegExp("(^|&)image1=([^&]*)(&|$)");
+    var result = window.location.search.substr(1).match(reg);
+
+    var image1 = result ? decodeURIComponent(result[2]) : null;
+    console.log(image1);
+
+    reg = new RegExp("(^|&)image2=([^&]*)(&|$)");
+    result = window.location.search.substr(1).match(reg);
+
+    var image2 = result ? decodeURIComponent(result[2]) : null;
+    console.log(image2);
+
+    var content = document.createElement('div');
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {    
+            
+            var diff = resemble('http://104.199.192.223/image1.jpg').compareTo('http://104.199.192.223/image2.jpg').ignoreAntialiasing().scaleToSameSize().onComplete(function (data) {
+                    var newContent = document.createTextNode(data.misMatchPercentage);
+                    content.appendChild(newContent);
+                    content.setAttribute('id', "content");
+                    var currentDiv = document.getElementById("container");
+                    document.body.insertBefore(content, currentDiv); 
+                    /*
+                    {
+                      misMatchPercentage : 100, // %
+                      isSameDimensions: true, // or false
+                      dimensionDifference: { width: 0, height: -1 }, // defined if dimensions are not the same
+                      getImageDataUrl: function(){}
+                    }
+                    */
+                });
+        }
+    };
+    xmlhttp.open("POST", "http://104.199.192.223/copy.php", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("image1=" + encodeURIComponent(image1) + "&image2=" + encodeURIComponent(image2));
+    
+
+    
+    </script>
+</body>
+</html>
