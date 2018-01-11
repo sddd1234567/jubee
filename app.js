@@ -12,6 +12,7 @@ var wildcard = require('node-wildcard');
 var fireAuth = require("./service/fireAuth");
 // var fireData = require("./service/fireData");
 
+
 app.engine('ejs', engine);
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, '/public')));
@@ -34,6 +35,16 @@ admin.initializeApp({
 var hotProducts;
 var hotKeywords;
 var discounts;
+
+
+(async () => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto('http://a.ecimg.tw/items/DGBJ85A9007KNO4/000001_1478552853.jpg');
+    await page.screenshot({ path: 'public/img/example.png' });
+
+    await browser.close();
+})();
 
 admin.database().ref('hotProducts').on('value', function (snapshot) {
     var productList = snapshot.val();
@@ -603,7 +614,6 @@ app.post('/removefromcollections',function(req,res){
     }
 })
 
-
 function updateHotKeywords(keyword){
     admin.database().ref('hotKeywords').once('value').then(function(snapshot){
         var products = snapshot.val();
@@ -643,7 +653,7 @@ function checkWebsiteFilter(website, website_filter){
 
 async function updateDataBase(){
     var pchomeProducts;
-    var filter_keywords = ["Camera", "頭戴", "VR MOVE", "FlashFire", "動態控制器", "攝影機", "防塵組", "集線器", "充電底座", "風扇", "方向盤", "同捆", "主機","手把防滑矽膠保護套"];
+    var filter_keywords = ["Camera", "頭戴", "VR MOVE", "FlashFire", "動態控制器", "攝影機", "防塵組", "集線器", "充電底座", "風扇", "方向盤", "同捆", "主機","手把防滑矽膠保護套","防汗"];
     await getPCHomeData().then(
         products => pchomeProducts = products
     );
@@ -667,11 +677,14 @@ async function updateDataBase(){
             for (key in filter_keywords) {
                 if (wildcard(el.title.toLowerCase(), '*' + filter_keywords[key].toLowerCase() + '*'))
                 {
+                    
                     flag = false;
                     console.log("移除" + el.title);
                 }
-                    
             }
+            // getDiff(el.image, el.image).then(
+            //     data => console.log(data.misMatchPercentage)
+            // );
             return flag;
         });
 
@@ -962,8 +975,9 @@ function reverseOrder(object){
     return newObject;
 }
 
+
 // getMomoSearchData("上古卷軸");
-updateDataBase();
+// updateDataBase();
 
 setInterval(updateDataBase, 1000*60*15);
 
