@@ -604,6 +604,11 @@ app.post('/signup', function(req,res){
                 return res.redirect('/');
             });
     }
+    else
+    {
+        var backURL = backURL = req.header('Referer') || '/';
+        res.render('alertMessage',{message: "兩次密碼輸入不相同", redirectURL: backURL});
+    }
         
     
 })
