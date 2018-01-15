@@ -572,8 +572,10 @@ app.post('/signup', function(req,res){
     let email = req.body.email;
     let password = req.body.passwd;
     let password_check = req.body.pwd_check;
+    console.log("signup");
     if(password == password_check)
     {
+        console.log("signup");
         fireAuth.createUserWithEmailAndPassword(email, password)
             .then(function (user) {
                 let saveUser = {
@@ -588,9 +590,11 @@ app.post('/signup', function(req,res){
                 ref.set(saveUser);
                 fireAuth.signInWithEmailAndPassword(email, password)
                     .then(function (user) {
+                        console.log("signup");
                         res.redirect('/');
                     })
                     .catch(function (error) {
+                        console.log("signup");
                         res.redirect('/');
                     });
             })
