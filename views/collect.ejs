@@ -36,7 +36,7 @@
                                     <p><%= collections[index].website %></p>
                                     <p class="price">$<%=collections[index].price%></p>
                                     <div class="result_buttons row">
-                                        <i class="material-icons col-12 col-md-auto"><a href="#"  data-toggle="modal" data-target="#alartme">add_alert</a></i>
+                                        <i class="material-icons col-12 col-md-auto"><a href="#" class = "alert" data-toggle="modal" data-target="#alertme" data-url= "<%=collections[index].url%>" data-title = "<%=collections[index].title%>">add_alert</a></i>
                                         <div class="col-12 col-md-auto">
                                             <a href = "javascript:clickLink({title: '<%=collections[index].title%>', price: <%=collections[index].price%>, website: '<%=collections[index].website%>', url: '<%=collections[index].url%>',image: '<%=collections[index].image%>'})"><button type="button" class="btn btn-info">馬上搶購</button></a>
                                             <a id = "<%=index%>" href = "javascript:removeFromCollections('<%=index%>')"><button type="button" class="btn btn-warning">取消收藏</button></a>
@@ -126,7 +126,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="alartme" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="alertme" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -136,14 +136,24 @@
         </button>
             </div>
             <div class="modal-body">
-                <label for="price" class = "label-lg">PS4 VR《上古卷軸5:無界天際》中英文版</label>
-                <input class="form-control" id = "price" type="number" placeholder="輸入價格">
+                <label for="price" id = "alert_modal_title" class = "label-lg"></label>
+                <input class="form-control" id = "alert_price" type="number" placeholder="輸入價格">
                 <small id="Help" class="form-text text-muted">我們會在低於這個價格時寄送email通知您。</small>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary">儲存</button>
+                <button type="button" class="btn btn-primary" onclick="addToAlert()">儲存</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    var alert_title;
+    var alert_url;
+$(".alert").click(function(event){
+    alert_title = event.target.getAttribute("data-title");
+    alert_url = event.target.getAttribute("data-url");
+    document.getElementById("alert_modal_title").innerText = alert_title;
+})
+</script>

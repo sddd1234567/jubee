@@ -29,3 +29,17 @@ function removeFromCollections(key) {
         xmlhttp.send("key=" + key);
     }
 }
+
+
+function addToAlert(){
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            alert(this.responseText);
+            $('#alertme').modal('hide');
+        }
+    };
+    xmlhttp.open("POST", "addtoalert", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("title=" + alert_title + "&price=" + document.getElementById("alert_price").value + "&url=" + encodeURIComponent(alert_url));
+}

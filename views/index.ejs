@@ -73,6 +73,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <% if(discounts.length >= 8){ %>
                                   <div class="carousel-item">
                                         <div class="row">
                                             <div class="col-3">
@@ -124,59 +125,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="carousel-item">
-                                        <div class="row">
-                                            <div class="col-3">
-                                                <a href="<%=discounts[8].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[8].product.image%>" alt="First slide"></a>
-                                                <div class="discount">
-                                                    <span class="rate"><%=discounts[8].discountRate%>%OFF</span>
-                                                    <p>
-                                                        <a href="<%=discounts[8].product.url%>" class="gamename">
-                                                            <%=discounts[8].product.title%>
-                                                        </a><br>
-                                                        <span class="price">$<%=discounts[8].product.price%></span><br>
-                                                        <span class="website"><%=discounts[8].product.website%></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <a href="<%=discounts[9].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[9].product.image%>" alt="First slide"></a>
-                                                <div class="discount">
-                                                    <span class="rate"><%=discounts[9].discountRate%>%OFF</span>
-                                                    <p>
-                                                        <a href="<%=discounts[1].product.url%>" class="gamename">
-                                                            <%=discounts[9].product.title%>
-                                                        </a><br>
-                                                        <span class="price">$<%=discounts[9].product.price%></span><br>
-                                                        <span class="website"><%=discounts[9].product.website%></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <a href="<%=discounts[10].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[10].product.image%>" alt="First slide"></a>
-                                                <div class="discount">
-                                                    <span class="rate"><%=discounts[10].discountRate%>%OFF</span>
-                                                    <p>
-                                                        <a href="<%=discounts[10].product.url%>" class="gamename">
-                                                            <%=discounts[10].product.title%>
-                                                        </a><br>
-                                                        <span class="price">$<%=discounts[10].product.price%></span><br>
-                                                        <span class="website"><%=discounts[10].product.website%></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <a href="<%=discounts[11].product.url%>"><img class="d-block w-100 mx-auto " src="<%=discounts[11].product.image%>" alt="First slide"></a>
-                                                <div class="discount">
-                                                    <span class="rate"><%=discounts[11].discountRate%>%OFF</span>
-                                                    <p>
-                                                        <a href="<%=discounts[11].product.url%>" class="gamename">
-                                                            <%=discounts[11].product.title%>
-                                                        </a><br>
-                                                        <span class="price">$<%=discounts[11].product.price%></span><br>
-                                                        <span class="website"><%=discounts[11].product.website%></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    </div>       
+                                    <% } %>                            
                                 </div>
                                 <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
                                   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
