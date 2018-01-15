@@ -549,7 +549,7 @@ app.get('/compare', function (req, res) {
                             }
                         }
                         console.log(req.originalUrl);
-                        admin.database().ref('history/' + auth).push({ title: result[0].title, image: result[0].image, productCount: productCount, minPrice: minPrice, maxPrice: maxPrice,URL: thisURL });
+                        admin.database().ref('history/' + auth).push({ title: result[0].title, image: result[0].image, productCount: productCount, minPrice: minPrice, maxPrice: maxPrice,url: thisURL });
                     }).catch(function () {
                         console.log("Promise Rejected");
                     });
