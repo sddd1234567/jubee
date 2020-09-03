@@ -20,7 +20,7 @@
     "firebase-admin": "^5.7.0",
     "node-wildcard": "0.0.9",
     "nodemailer": "^4.4.1",
-    "puppeteer": "^0.13.0",
+    "puppeteer": "^1.13.0",
     "xmlhttprequest": "^1.8.0"
   }
 }
