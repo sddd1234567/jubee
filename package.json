@@ -17,7 +17,7 @@
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "firebase": "^4.8.1",
-    "firebase-admin": "^5.7.0",
+    "firebase-admin": "^11.4.1",
     "node-wildcard": "0.0.9",
     "nodemailer": "^4.4.1",
     "puppeteer": "^0.13.0",
